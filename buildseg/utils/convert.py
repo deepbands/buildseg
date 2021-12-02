@@ -1,4 +1,5 @@
 import numpy as np
+from .raster2uint8 import raster_to_uint8
 
 try:
     import gdal
@@ -33,11 +34,11 @@ def layer2array(layer):
     if gd.RasterCount != 1:
         array_list = []
         for b in band_list:
-            band = gd.GetBand(b)
-            array_list.append(band.ReadAsArray())
+            band = gd.GetRasterBand(b)
+            array_list.append(raster_to_uint8(band.ReadAsArray()))
         array = np.stack(array_list, axis=2)
     else:
-        array = gd.ReadAsArray()
+        array = raster_to_uint8(gd.ReadAsArray())
     return array
 
 
