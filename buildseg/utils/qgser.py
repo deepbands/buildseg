@@ -1,7 +1,12 @@
-import numpy as np
 from qgis.utils import iface
 from qgis.core import QgsProject, QgsVectorLayer, QgsGeometry, QgsFeature
+import numpy as np
 from .convert import convert_coord
+
+try:
+    import gdal
+except:
+    from osgeo import gdal
 
 
 def __getgtypes():
@@ -30,14 +35,13 @@ def showgeoms(geoms, name="tmp", gtype=None, proj=None):
     iface.zoomFull()
 
 
-def get_transform(result, size_tuple):
-    extent_result = result.extent()
-    # n_cols = result.width()
-    # n_rows = result.height()
-    n_rows, n_cols = size_tuple
-    tform = np.array([[extent_result.width() / n_cols, 0.0, extent_result.xMinimum()],
-		     [0.0, -extent_result.height() / n_rows, extent_result.yMaximum()],
-             [0, 0, 1]])
+def get_transform(layer):
+    gd = gdal.Open(str(layer.source()))
+    tf = gd.GetGeoTransform()
+    tform = np.zeros((3, 3))
+    tform[0, :] = np.array([tf[1], tf[2], tf[0]])
+    tform[1, :] = np.array([tf[4], tf[5], tf[3]])
+    tform[2, :] = np.array([0, 0, 1])
     return tform
 
 

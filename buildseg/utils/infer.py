@@ -45,8 +45,12 @@ class InferWorker:
         pred *= -255
         return pred.astype("uint8").squeeze()
 
-    def get_mask(self, img):
-        img = self.__process(img)
+    def get_mask(self, img, grid_size=[512, 512]):
+        h, w = img.shape[:2]
+        tmp = np.zeros((grid_size[0], grid_size[1], 3))
+        tmp[:h, :w, :] = img
+        img = self.__process(tmp)
         pre = self.seg_model(img)
         pred = self.__tensor2result(pre)
-        return pred
+        pred = cv2.resize(pred, dsize=grid_size, interpolation=cv2.INTER_NEAREST)
+        return pred[:h, :w]

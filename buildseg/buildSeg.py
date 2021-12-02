@@ -31,7 +31,9 @@ from .buildSeg_dialog import buildSegDialog
 import os.path
 # tools
 from qgis.utils import iface
-from qgis.core import QgsMapLayerType, QgsProject
+from qgis.core import QgsMapLayerType
+import cv2
+import numpy as np
 from .utils import *
 
 
@@ -219,12 +221,20 @@ class buildSeg:
             # substitute with your code.
             layers = iface.activeLayer()  # 获取当前激活图层
             proj = layers.crs()
+            grid_size = [512, 512]
+            overlap = [24, 24]
             # 若此图层为栅格图层
             if layers.type() == QgsMapLayerType.RasterLayer:
-                img = layer2array(layers)  # raster2ndarray(layers)
-                mask = self.infer_worker.get_mask(img)
+                xsize, ysize = layers.width(), layers.height()
+                grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
+                for i in range(grid_count[0]):
+                    for j in range(grid_count[1]):
+                        img = layer2array(layers, i, j, grid_size, overlap)
+                        mask_grids[i][j] = self.infer_worker.get_mask(img)
+                mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
+                # cv2.imwrite(r"E:\PdCVSIG\github\images\rs_img\test.png", mask)  # test
                 build_bound = bound2shp(get_polygon(mask), 
-                                        get_transform(layers, self.infer_worker.size_tuple)) 
+                                        get_transform(layers))
                 showgeoms([build_bound], "build_bound", proj=proj)
             else:
                 print("当前活动图层非栅格图层")
