@@ -32,8 +32,6 @@ import os.path
 # tools
 from qgis.utils import iface
 from qgis.core import QgsMapLayerType
-import cv2
-import numpy as np
 from .utils import *
 
 
@@ -227,12 +225,19 @@ class buildSeg:
             if layers.type() == QgsMapLayerType.RasterLayer:
                 xsize, ysize = layers.width(), layers.height()
                 grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
+                number = grid_count[0] * grid_count[1]
+                print("开始分块处理")
                 for i in range(grid_count[0]):
                     for j in range(grid_count[1]):
                         img = layer2array(layers, i, j, grid_size, overlap)
                         mask_grids[i][j] = self.infer_worker.get_mask(img)
+                        print(f"-- {i * grid_count[0] + j + 1}/{number} --")
+                print("开始拼接")
                 mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
-                # cv2.imwrite(r"E:\PdCVSIG\github\images\rs_img\test.png", mask)  # test
+                # test
+                # import cv2
+                # cv2.imwrite(r"E:\PdCVSIG\github\images\rs_img\test.png", mask)
+                print("开始提取边界")
                 build_bound = bound2shp(get_polygon(mask), 
                                         get_transform(layers))
                 showgeoms([build_bound], "build_bound", proj=proj)

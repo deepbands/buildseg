@@ -3,6 +3,8 @@
 
 buildseg is a building extraction plugin of QGIS based on PaddlePaddle.
 
+![gasd](https://user-images.githubusercontent.com/71769312/144436933-f22c6a14-706f-406b-ad04-c0e784ed317b.gif)
+
 ## TODO
 
 - [x] Extract building on 512x512 remote sensing images.
@@ -10,5 +12,6 @@ buildseg is a building extraction plugin of QGIS based on PaddlePaddle.
 - [ ] Replace the model and parameters (large-scale data).
 - [ ] Convert to static weight.
 - [ ] Hole digging inside polygon.
+- [ ] Convert raster to shapefile by GIS instead of findContours in OpenCV.
 - [ ] Update plugin's UI.
 - [ ] Accelerate, etc.

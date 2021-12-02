@@ -133,3 +133,10 @@ dmypy.json
 
 params
 *.pdparams
+
+data
+*.tif
+*.tfw
+*.xml
+*.cpg
+*.dbf
