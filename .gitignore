@@ -140,3 +140,4 @@ data
 *.xml
 *.cpg
 *.dbf
+buildseg/i18n/buildSeg.pro.user
