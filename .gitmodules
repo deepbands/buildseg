@@ -1,0 +1,3 @@
+[submodule "buildseg"]
+    path = buildseg
+    url = https://github.com/geoyee/pyqgis_learning/tree/main/plugin/buildseg
