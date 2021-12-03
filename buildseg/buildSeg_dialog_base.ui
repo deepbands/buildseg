@@ -57,7 +57,7 @@
           </size>
          </property>
          <property name="text">
-          <string>模型名称</string>
+          <string>Model name</string>
          </property>
         </widget>
        </item>
@@ -83,7 +83,7 @@
        <item>
         <widget class="QLabel" name="lblParams">
          <property name="text">
-          <string>参数路径</string>
+          <string>Parameter path</string>
          </property>
         </widget>
        </item>
