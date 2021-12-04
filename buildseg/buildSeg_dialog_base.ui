@@ -35,50 +35,6 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QHBoxLayout" name="hLayModel">
-       <item>
-        <widget class="QLabel" name="lblModel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>60</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>60</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Model name</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="cmbModel">
-         <property name="editable">
-          <bool>false</bool>
-         </property>
-         <property name="currentText">
-          <string>Unet</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Unet</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="hLayParams">
        <item>
         <widget class="QLabel" name="lblParams">

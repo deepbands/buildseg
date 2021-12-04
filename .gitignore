@@ -131,13 +131,21 @@ dmypy.json
 # vscode
 *vscode
 
-# params
+# train/weight
 *.pdparams
 
 data
 *.tif
 *.tfw
-*.xml
-*.cpg
-*.dbf
+*.tif.aux.xml
+*.tif.vat.cpg
+*.tif.vat.dbf
+*.tif.xml
+
 buildseg/i18n/buildSeg.pro.user
+
+static_weight
+*.yaml
+*.pdmodel
+*.pdiparams
+*.pdiparams.info

@@ -1,56 +1,60 @@
-import os.path as osp
-import numpy as np
 import cv2
-import paddle
-from paddleseg.models.unet import UNet
+import numpy as np
+import paddle.inference as paddle_infer
 
 
-class InferWorker:
-    MODELS = {"unet": UNet(num_classes=2)}
-    
-    def __init__(self, model: str, params_path=None, size_tuple=(256, 256)) -> None:
-        self.seg_model = self.MODELS[model]
-        if params_path is not None:
-            self.load_params(params_path)
-        self.params_path = params_path
-        self.size_tuple = size_tuple
-        __mean=[0.5] * 3
-        __std=[0.5] * 3
-        self.__mean = np.float32(np.array(__mean).reshape(-1, 1, 1))
-        self.__std = np.float32(np.array(__std).reshape(-1, 1, 1))
+class InferWorker(object):
+    def __init__(self, model_file, params_path, size=512):
+        super(InferWorker, self).__init__()
+        if model_file is not None and params_path is not None:
+            config = paddle_infer.Config(model_file, params_path)  # 创建config
+            config.enable_use_gpu(200, 0)
+            self.predictor = paddle_infer.create_predictor(config)  # 根据config创建predictor
+        self.size = (size, size) if isinstance(size, int) else size
+        _mean=[0.5] * 3
+        _std=[0.5] * 3
+        self._mean = np.float32(np.array(_mean).reshape(-1, 1, 1))
+        self._std = np.float32(np.array(_std).reshape(-1, 1, 1))
 
-    def load_params(self, path):
-        if osp.exists(path):
-            params = paddle.load(path)
-            self.seg_model.set_state_dict(params)
-            self.params_path = path
-            print("加载参数成功")
-        else:
-            print("未找到参数路径")
+    def load_model(self, model_file, params_path):
+        config = paddle_infer.Config(model_file, params_path)
+        config.enable_use_gpu(200, 0)
+        self.predictor = paddle_infer.create_predictor(config)
 
-    def __process(self, img):
-        img = cv2.resize(img, self.size_tuple, interpolation=cv2.INTER_CUBIC)
+    def _preprocess(self, img):
+        img = cv2.resize(img, self.size, interpolation=cv2.INTER_CUBIC)
         img = (img.astype("float32") / 255.).transpose((2, 0, 1))
-        img = (img - self.__mean) / self.__std
+        img = (img - self._mean) / self._std
         C, H, W = img.shape
         img = img.reshape([1, C, H, W])
-        return paddle.to_tensor(img)
+        return img
 
-    def __tensor2result(self, pre):
-        if isinstance(pre, list):
-            pre = pre[0]
-        pred = paddle.argmax(pre, axis=1).numpy()
-        # 标注反了
-        pred -= 1
-        pred *= -255
-        return pred.astype("uint8").squeeze()
+    def infer(self, img):
+        # 获取输入的名称
+        input_names = self.predictor.get_input_names()
+        input_handle = self.predictor.get_input_handle(input_names[0])
+        # 设置输入
+        input = self._preprocess(img)
+        input_handle.reshape([1, 3, self.size[0], self.size[1]])
+        input_handle.copy_from_cpu(input)
+        # 运行predictor
+        self.predictor.run()
+        # 获取输出
+        output_names = self.predictor.get_output_names()
+        output_handle = self.predictor.get_output_handle(output_names[0])
+        output_data = output_handle.copy_to_cpu()  # nd类型
+        return np.squeeze(output_data.astype("uint8") * 255)
 
-    def get_mask(self, img, grid_size=[512, 512]):
-        h, w = img.shape[:2]
-        tmp = np.zeros((grid_size[0], grid_size[1], 3))
-        tmp[:h, :w, :] = img
-        img = self.__process(tmp)
-        pre = self.seg_model(img)
-        pred = self.__tensor2result(pre)
-        pred = cv2.resize(pred, dsize=grid_size, interpolation=cv2.INTER_NEAREST)
-        return pred[:h, :w]
+
+# test
+if __name__ == "__main__":
+    img_path = "train/dataset/img/4_1_bc.jpg"
+    model_path = "static_weight/model.pdmodel"
+    params_path = "static_weight/model.pdiparams"
+    infer_worker = InferWorker(model_path, params_path)
+    img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB)
+    pred = infer_worker.infer(img)
+    print(type(pred), pred.shape)
+    cv2.imshow("test", pred)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

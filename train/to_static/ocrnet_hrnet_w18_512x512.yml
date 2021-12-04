@@ -1,0 +1,11 @@
+model:
+  num_classes: 2
+  type: OCRNet
+  backbone:
+    type: HRNet_W18
+  backbone_indices: [0]
+
+transforms:
+  - type: Padding
+    target_size: [512, 512]
+  - type: Normalize

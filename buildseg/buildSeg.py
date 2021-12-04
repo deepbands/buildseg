@@ -69,7 +69,8 @@ class buildSeg:
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
-
+        self.param_file = None
+        self.model_file = None
         self.infer_worker = None
 
     # noinspection PyMethodMayBeStatic
@@ -188,10 +189,12 @@ class buildSeg:
     # 加载参数
     def select_params_file(self):
         filename, _ = QFileDialog.getOpenFileName(
-            self.dlg, "选择参数路径", "", "*.pdparams")
+            self.dlg, "选择参数路径", "", "*.pdiparams")
         self.dlg.edtParams.setText(filename)
+        self.param_file = filename
+        self.model_file = self.param_file.replace(".pdiparams", ".pdmodel")
         if self.infer_worker is not None:
-            self.infer_worker.load_params(filename)
+            self.infer_worker.load_model(self.model_file, self.param_file)
             print("成功加载参数")
 
 
@@ -210,7 +213,7 @@ class buildSeg:
 
         # show the dialog
         self.dlg.show()
-        self.infer_worker = InferWorker(self.dlg.cmbModel.currentText().lower())
+        self.infer_worker = InferWorker(self.model_file, self.param_file)
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
@@ -230,7 +233,7 @@ class buildSeg:
                 for i in range(grid_count[0]):
                     for j in range(grid_count[1]):
                         img = layer2array(layers, i, j, grid_size, overlap)
-                        mask_grids[i][j] = self.infer_worker.get_mask(img)
+                        mask_grids[i][j] = self.infer_worker.infer(img)
                         print(f"-- {i * grid_count[0] + j + 1}/{number} --")
                 print("开始拼接")
                 mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
