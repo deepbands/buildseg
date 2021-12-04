@@ -3,7 +3,7 @@
 
 buildseg is a building extraction plugin of QGIS based on PaddlePaddle.
 
-![gsdkjl](https://user-images.githubusercontent.com/71769312/144696383-6701eb99-1a4f-4403-93df-5ab4fac801d3.gif)
+![buildseg-example](https://user-images.githubusercontent.com/13020265/144725765-3650bb7d-5755-4c12-b1ff-50694520b6c4.gif)
 
 ## How to use
 1. Download and install [QGIS](https://www.qgis.org/en/site/) and clone the repo:
