@@ -9,23 +9,20 @@
         <translation>buildSeg</translation>
     </message>
     <message>
-        <location filename="../buildSeg_dialog_base.ui" line="60"/>
         <source>Model name</source>
-        <translation>模型名称</translation>
+        <translation type="vanished">模型名称</translation>
     </message>
     <message>
-        <location filename="../buildSeg_dialog_base.ui" line="70"/>
-        <location filename="../buildSeg_dialog_base.ui" line="74"/>
         <source>Unet</source>
-        <translation>Unet</translation>
+        <translation type="vanished">Unet</translation>
     </message>
     <message>
-        <location filename="../buildSeg_dialog_base.ui" line="86"/>
+        <location filename="../buildSeg_dialog_base.ui" line="42"/>
         <source>Parameter path</source>
         <translation>参数路径</translation>
     </message>
     <message>
-        <location filename="../buildSeg_dialog_base.ui" line="96"/>
+        <location filename="../buildSeg_dialog_base.ui" line="52"/>
         <source>...</source>
         <translation>...</translation>
     </message>

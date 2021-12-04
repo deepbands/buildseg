@@ -12,8 +12,8 @@ email=geoyee@yeah.net
 
 about=Deep learning building segmentation base on PaddlePaddle.
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/geoyee/buildseg/labels/bug
+repository=https://github.com/geoyee/buildseg
 # End of mandatory metadata
 
 # Recommended items:

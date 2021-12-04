@@ -186,16 +186,16 @@ class buildSeg:
             self.iface.removeToolBarIcon(action)
 
 
-    # 加载参数
+    # Load parameters
     def select_params_file(self):
         filename, _ = QFileDialog.getOpenFileName(
-            self.dlg, "选择参数路径", "", "*.pdiparams")
+            self.dlg, "Select parameter path", "", "*.pdiparams")
         self.dlg.edtParams.setText(filename)
         self.param_file = filename
         self.model_file = self.param_file.replace(".pdiparams", ".pdmodel")
         if self.infer_worker is not None:
             self.infer_worker.load_model(self.model_file, self.param_file)
-            print("成功加载参数")
+            print("Parameters loaded successfully")
 
 
     def run(self):
@@ -206,9 +206,9 @@ class buildSeg:
         if self.first_start == True:
             self.first_start = False
             self.dlg = buildSegDialog()
-            # 初始化
+            # initialization
             self.infer_worker = None
-        # 添加事件
+        # Add event
         self.dlg.btnParams.clicked.connect(self.select_params_file)
 
         # show the dialog
@@ -220,29 +220,29 @@ class buildSeg:
         if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            layers = iface.activeLayer()  # 获取当前激活图层
+            layers = iface.activeLayer()  # Get the currently active layer
             proj = layers.crs()
             grid_size = [512, 512]
             overlap = [24, 24]
-            # 若此图层为栅格图层
+            # If this layer is a raster layer
             if layers.type() == QgsMapLayerType.RasterLayer:
                 xsize, ysize = layers.width(), layers.height()
                 grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
                 number = grid_count[0] * grid_count[1]
-                print("开始分块处理")
+                print("Start block processing")
                 for i in range(grid_count[0]):
                     for j in range(grid_count[1]):
                         img = layer2array(layers, i, j, grid_size, overlap)
                         mask_grids[i][j] = self.infer_worker.infer(img)
                         print(f"-- {i * grid_count[0] + j + 1}/{number} --")
-                print("开始拼接")
+                print("Start Spliting")
                 mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
                 # test
                 # import cv2
                 # cv2.imwrite(r"E:\PdCVSIG\github\images\rs_img\test.png", mask)
-                print("开始提取边界")
+                print("Start to extract the boundary")
                 build_bound = bound2shp(get_polygon(mask), 
                                         get_transform(layers))
                 showgeoms([build_bound], "build_bound", proj=proj)
             else:
-                print("当前活动图层非栅格图层")
+                print("The current active layer is not a raster layer")
