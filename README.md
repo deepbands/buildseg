@@ -1,7 +1,9 @@
 # buildseg
-[![Python 3.8](https://img.shields.io/badge/python-3.8-red.svg)](https://www.python.org/downloads/release/python-360/) [![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2-green.svg)](https://www.python.org/downloads/release/python-360/) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.8](https://img.shields.io/badge/python-3.8-red.svg)](https://www.python.org/downloads/release/python-360/) 
+[![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2-green.svg)](https://www.python.org/downloads/release/python-360/) 
+[![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
-buildseg is a building extraction plugin of QGIS based on PaddlePaddle.
+buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle.
 
 ![buildseg-example](https://user-images.githubusercontent.com/13020265/144725765-3650bb7d-5755-4c12-b1ff-50694520b6c4.gif)
 
