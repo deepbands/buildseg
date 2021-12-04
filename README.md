@@ -14,12 +14,17 @@ buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle.
 git clone git@github.com:geoyee/buildseg.git
 ```
 
-2. Enter the folder and install dependent libraries using OSGeo4W shell:
-
+2. Install requirements :
+- Enter the folder and install dependent libraries using OSGeo4W shell (Open As Administrator) :
 ``` shell
 cd buildseg
 pip install -r requirements.txt
 ```
+** or - Open OSGeo4W shell as administrator and enter :
+``` shell
+pip install opencv-python paddlepaddle>=2.2.0 paddleseg --user
+```
+
 
 3. Copy folder named buildseg in QGIS configuration folder(?\default\python\plugins) and choose the plugin from plugin manager in QGIS (If not appeared restart QGIS).
 - You can know this folder from QGIS Setting Menu at the top-left of QGIS UI `Settings>User Profiles>Open Active Profile Folder` 
