@@ -1,0 +1,3 @@
+[submodule "train/weight"]
+	path = train/weight
+	url = git@github.com:geoyee/buildseg-params.git

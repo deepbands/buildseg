@@ -6,7 +6,7 @@ buildseg is a building extraction plugin of QGIS based on PaddlePaddle.
 ![gasd](https://user-images.githubusercontent.com/71769312/144436933-f22c6a14-706f-406b-ad04-c0e784ed317b.gif)
 
 ## How to use
-1. Download and install QGIS and clone the repo:
+1. Download and install [QGIS](https://www.qgis.org/en/site/) and clone the repo:
 
 ``` git
 git clone git@github.com:geoyee/buildseg.git
@@ -25,9 +25,12 @@ pip install -r requirements.txt
 
 ## Model and Parameter
 
-| Model              | mIoU | Size(Pix) | Params(M) | Inference Time(ms) | Static Weight | Dygraph Weight |
-| ------------------ | ---- | --------- | --------- | ------------------ | ------------- | -------------- |
-| OCRNet (HRNet_W18) |      | 512x512   |           |                    |               |                |
+| Model  | Backbone  | Resolution |  mIoU  | Params(MB) | Inference Time(ms) |       Links       |
+| :----: | :-------: | :--------: | :----: | :--------: | :----------------: | :---------------: |
+| OCRNet | HRNet_W18 |  512x512   | 90.64% |    46.4    |         /          | [Static Weight]() |
+
+- Train/Eval Dataset: [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
+- Inference Environment: Tesla V100 32G in AI Studio.
 
 ## TODO
 

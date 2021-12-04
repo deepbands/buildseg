@@ -131,7 +131,7 @@ dmypy.json
 # vscode
 *vscode
 
-params
+# params
 *.pdparams
 
 data
