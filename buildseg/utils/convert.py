@@ -7,14 +7,13 @@ except:
     from osgeo import gdal
 
 
-# # TODO: 效率低
 # def raster2ndarray(lyr):
 #     '''
 #         input: lyr(QgsMapLayerType.QgsRasterLayer)
 #         output: _(ndarray)
 #     '''
 #     provider= lyr.dataProvider()
-#     # 多少个波段
+#     # Band number
 #     blocks = []
 #     for c in range(lyr.bandCount()):
 #         blocks.append(provider.block((c + 1), lyr.extent(), lyr.width(), lyr.height()))
@@ -27,10 +26,9 @@ except:
 #     return np.array(values)
 
 
-# TODO: 会不会更加占用内存，目前最好的解决方案
 def layer2array(layer, row=None, col=None, grid_size=[512, 512], overlap=[24, 24]):
     gd = gdal.Open(str(layer.source()))
-    band_list = layer.renderer().usesBands()  # 当前渲染器使用的波段
+    band_list = layer.renderer().usesBands()  # Band used by the current renderer
     width, height = layer.width(), layer.height()
     if gd.RasterCount != 1:
         array_list = []

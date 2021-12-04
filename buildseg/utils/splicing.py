@@ -34,7 +34,7 @@ def splicing_grids(img_list, ysize, xsize, grid_size=[512, 512], overlap=[24, 24
             start_w = (j * w) if j == 0 else (j * (w - overlap[1]))
             end_w = start_w + w
             # print("se: ", start_h, end_h, start_w, end_w)
-            # 单区自己，重叠取或
+            # Or operation on overlapping areas
             if (i + j) % 2 == 0:
                 result_1[start_h: end_h, start_w: end_w] = im
             else:

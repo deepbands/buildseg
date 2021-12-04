@@ -6,6 +6,6 @@ model:
   backbone_indices: [0]
 
 transforms:
-  - type: Padding
+  - type: Resize
     target_size: [512, 512]
   - type: Normalize

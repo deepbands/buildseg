@@ -7,9 +7,9 @@ class InferWorker(object):
     def __init__(self, model_file, params_path, size=512):
         super(InferWorker, self).__init__()
         if model_file is not None and params_path is not None:
-            config = paddle_infer.Config(model_file, params_path)  # 创建config
+            config = paddle_infer.Config(model_file, params_path)  # Create config
             config.enable_use_gpu(200, 0)
-            self.predictor = paddle_infer.create_predictor(config)  # 根据config创建predictor
+            self.predictor = paddle_infer.create_predictor(config)  # Create predictor from config
         self.size = (size, size) if isinstance(size, int) else size
         _mean=[0.5] * 3
         _std=[0.5] * 3
@@ -30,19 +30,19 @@ class InferWorker(object):
         return img
 
     def infer(self, img):
-        # 获取输入的名称
+        # Get name of input
         input_names = self.predictor.get_input_names()
         input_handle = self.predictor.get_input_handle(input_names[0])
-        # 设置输入
+        # Set input
         input = self._preprocess(img)
         input_handle.reshape([1, 3, self.size[0], self.size[1]])
         input_handle.copy_from_cpu(input)
-        # 运行predictor
+        # Run predictor
         self.predictor.run()
-        # 获取输出
+        # Get output
         output_names = self.predictor.get_output_names()
         output_handle = self.predictor.get_output_handle(output_names[0])
-        output_data = output_handle.copy_to_cpu()  # nd类型
+        output_data = output_handle.copy_to_cpu()  # Convert ndarray
         return np.squeeze(output_data.astype("uint8") * 255)
 
 
