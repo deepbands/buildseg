@@ -19,9 +19,12 @@ cd buildseg
 pip install -r requirements.txt
 ```
 
-3. Copy folder named buildseg in QGIS configuration folder(?\default\python\plugins) and reload plugin.
+3. Copy folder named buildseg in QGIS configuration folder(?\default\python\plugins) and choose the plugin from plugin manager in QGIS (If not appeared restart QGIS).
+- You can know this folder from QGIS Setting Menu at the top-left of QGIS UI `Settings>User Profiles>Open Active Profile Folder` 
+- Go to `python/plugins` then paste the buildseg folder.
+- Full path should be like : `C:\Users\$USER\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins\buildseg`.
 
-4. Open QGIS and load raster, and use the plugin to select the parameter file(*.pdiparams).
+4. Open QGIS, load your raster and select the parameter file ([*.pdiparams](https://cloud.a-boat.cn:2021/share/3xda5wmV)) then click ok. 
 
 ## Model and Parameter
 
@@ -30,18 +33,21 @@ pip install -r requirements.txt
 | OCRNet | HRNet_W18 |  512x512   | 90.64% |    46.4    |         /          | [Static Weight](https://cloud.a-boat.cn:2021/share/3xda5wmV) |
 
 - Train/Eval Dataset: [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
-- Inference Environment: Tesla V100 32G in AI Studio.
+- We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).
 
 ## TODO
 
 - [x] Extract building on 512x512 remote sensing images.
-- [x] Extract building on big remote sensing images through sliding frame and splicing.
+- [x] Extract building on big remote sensing images through splitting it into small tiles, extract buildings then mosaic it back (merge) to a full extent.
 - [x] Replace the model and parameters (large-scale data).
-- [x] Convert to static weight.
-- [x] Add a Jupyter Notebook(*.ipynb) about how to fine-tune it used other's dataset based on  PaddleSeg.
-- [ ] Hole digging inside polygon.
-- [ ] Convert raster to shapefile by GIS instead of findContours in OpenCV.
+- [x] Convert to static weight (*.pdiparams) instead of dynamic model (*.pdparams).
+- [x] Add a Jupyter Notebook(*.ipynb) about how to fine-tune parameters using other's datasets based on  PaddleSeg.
+- [ ] Hole digging inside the polygons.
+- [ ] Convert raster to Shapefile/GeoJson by GDAL/OGR (gdal.Polygonize) instead of findContours in OpenCV.
 - [ ] Update plugin's UI.
+    - [ ] Add menu to select one raster file from QGIS opened raster layers.
+    - [ ] Select the Parameter path one time (some buggy windows appear when importing the *.pdiparams file).
+    - [ ] Define the output path of the vector file (Direct Path or Temporary in the memory).
 - [ ] Accelerate, etc.
 - [ ] Add another model, like Vision Transform.
 
