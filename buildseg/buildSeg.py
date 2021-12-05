@@ -33,6 +33,8 @@ import os.path
 from qgis.utils import iface
 from qgis.core import QgsMapLayerType
 from .utils import *
+# DEBUG
+import cv2
 
 
 class buildSeg:
@@ -233,13 +235,13 @@ class buildSeg:
                 for i in range(grid_count[0]):
                     for j in range(grid_count[1]):
                         img = layer2array(layers, i, j, grid_size, overlap)
+                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".jpg", img)  # test
                         mask_grids[i][j] = self.infer_worker.infer(img)
+                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".png", mask_grids[i][j])  # test
                         print(f"-- {i * grid_count[0] + j + 1}/{number} --")
                 print("Start Spliting")
                 mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
-                # test
-                # import cv2
-                # cv2.imwrite(r"E:\PdCVSIG\github\images\rs_img\test.png", mask)
+                # cv2.imwrite("C:/Users/Geoyee/Desktop/test.png", mask)  # test
                 print("Start to extract the boundary")
                 build_bound = bound2shp(get_polygon(mask), 
                                         get_transform(layers))

@@ -6,10 +6,15 @@ def create_grids(ysize, xsize, grid_size=[512, 512], overlap=[24, 24]):
     img_size = np.array([ysize, xsize])
     grid_size = np.array(grid_size)
     overlap = np.array(overlap)
+    remainder = np.mod(img_size, grid_size)  # Mod
     grid_count = np.ceil((img_size + overlap) / grid_size)
-    grid_count = grid_count = grid_count.astype("uint16")
+    for i in range(2):
+        if remainder[i] > overlap[i]:
+            grid_count[i] += 1
+    # grid_count = np.ceil((img_size + overlap) / grid_size)
+    grid_count = grid_count.astype("uint16")
     mask_grids = [[np.zeros(grid_size) \
-                        for _ in range(grid_count[1])] for _ in range(grid_count[0])]
+                   for _ in range(grid_count[1])] for _ in range(grid_count[0])]
     return list(grid_count), mask_grids
 
 
@@ -18,8 +23,9 @@ def splicing_grids(img_list, ysize, xsize, grid_size=[512, 512], overlap=[24, 24
     grid_size = np.array(grid_size)
     overlap = np.array(overlap)
     h, w = grid_size
-    row = math.ceil(raw_size[0] / h)
-    col = math.ceil(raw_size[1] / w)
+    # row = math.ceil(raw_size[0] / h)
+    # col = math.ceil(raw_size[1] / w)
+    row, col = len(img_list), len(img_list[0])
     # print("row, col:", row, col)
     result_1 = np.zeros((h * row, w * col), dtype=np.uint8)
     result_2 = result_1.copy()

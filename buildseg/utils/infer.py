@@ -7,9 +7,7 @@ class InferWorker(object):
     def __init__(self, model_file, params_path, size=512):
         super(InferWorker, self).__init__()
         if model_file is not None and params_path is not None:
-            config = paddle_infer.Config(model_file, params_path)  # Create config
-            config.enable_use_gpu(200, 0)
-            self.predictor = paddle_infer.create_predictor(config)  # Create predictor from config
+            self.load_model(model_file, params_path)
         self.size = (size, size) if isinstance(size, int) else size
         _mean=[0.5] * 3
         _std=[0.5] * 3
@@ -17,12 +15,15 @@ class InferWorker(object):
         self._std = np.float32(np.array(_std).reshape(-1, 1, 1))
 
     def load_model(self, model_file, params_path):
-        config = paddle_infer.Config(model_file, params_path)
+        config = paddle_infer.Config(model_file, params_path)  # Create config
         config.enable_use_gpu(200, 0)
-        self.predictor = paddle_infer.create_predictor(config)
+        self.predictor = paddle_infer.create_predictor(config)  # Create predictor from config
 
-    def _preprocess(self, img):
-        img = cv2.resize(img, self.size, interpolation=cv2.INTER_CUBIC)
+    def __preprocess(self, img):
+        h, w = img.shape[:2]
+        tmp = np.zeros((self.size[0], self.size[1], 3), dtype="uint8")
+        tmp[:h, :w, :] = img
+        img = cv2.resize(tmp, self.size, interpolation=cv2.INTER_CUBIC)
         img = (img.astype("float32") / 255.).transpose((2, 0, 1))
         img = (img - self._mean) / self._std
         C, H, W = img.shape
@@ -34,7 +35,7 @@ class InferWorker(object):
         input_names = self.predictor.get_input_names()
         input_handle = self.predictor.get_input_handle(input_names[0])
         # Set input
-        input = self._preprocess(img)
+        input = self.__preprocess(img)
         input_handle.reshape([1, 3, self.size[0], self.size[1]])
         input_handle.copy_from_cpu(input)
         # Run predictor
