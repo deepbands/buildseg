@@ -18,7 +18,7 @@ git clone git@github.com:geoyee/buildseg.git
 cd buildseg
 pip install -r requirements.txt
 ```
-​		Or open OSGeo4W shell as administrator and enter :
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Or open OSGeo4W shell as administrator and enter :
 
 ``` shell
 pip install opencv-python paddlepaddle>=2.2.0 paddleseg --user
@@ -50,7 +50,7 @@ pip install opencv-python paddlepaddle>=2.2.0 paddleseg --user
 - [x] Add a Jupyter Notebook (\*.ipynb) about how to fine-tune parameters using other's datasets based on  PaddleSeg.
 - [ ] Hole digging inside the polygons.
 - [ ] Convert raster to Shapefile/GeoJson by GDAL/OGR (gdal.Polygonize) instead of findContours in OpenCV.
-- [ ] Update plugin's UI.
+- [ ] Update plugin's UI :
     - [ ] Add menu to select one raster file from QGIS opened raster layers.
     - [ ] Select the Parameter path one time (some buggy windows appear when importing the \*.pdiparams file).
     - [ ] Define the output path of the vector file (Direct Path or Temporary in the memory).
