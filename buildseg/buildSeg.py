@@ -196,7 +196,8 @@ class buildSeg:
         self.param_file = filename
         self.model_file = self.param_file.replace(".pdiparams", ".pdmodel")
         if self.infer_worker is not None:
-            self.infer_worker.load_model(self.model_file, self.param_file)
+            self.infer_worker.load_model(self.model_file, self.param_file, \
+                                         use_gpu=self.dlg.ccbGPU.isChecked())
             print("Parameters loaded successfully")
 
 
@@ -215,7 +216,8 @@ class buildSeg:
 
         # show the dialog
         self.dlg.show()
-        self.infer_worker = InferWorker(self.model_file, self.param_file)
+        self.infer_worker = InferWorker(self.model_file, self.param_file, \
+                                        use_gpu=self.dlg.ccbGPU.isChecked())
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
