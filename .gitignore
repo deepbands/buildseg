@@ -141,6 +141,7 @@ data
 *.tif.vat.cpg
 *.tif.vat.dbf
 *.tif.xml
+*.tif.ovr
 
 buildseg/i18n/buildSeg.pro.user
 

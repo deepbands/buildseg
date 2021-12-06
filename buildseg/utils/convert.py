@@ -34,16 +34,17 @@ def layer2array(layer, row=None, col=None, grid_size=[512, 512], overlap=[24, 24
         array_list = []
         for b in band_list:
             band = gd.GetRasterBand(b)
-            array_list.append(raster_to_uint8(get_grid(band, row, col, \
+            array_list.append(raster_to_uint8(__get_grid(band, row, col, \
                                                        width, height, grid_size, overlap)))
         array = np.stack(array_list, axis=2)
     else:
-        array = raster_to_uint8(get_grid(gd, row, col, \
+        array = raster_to_uint8(__get_grid(gd, row, col, \
                                          width, height, grid_size, overlap))
+    del gd
     return array
 
 
-def get_grid(gd, row, col, width, height, grid_size, overlap):
+def __get_grid(gd, row, col, width, height, grid_size, overlap):
     grid_size = np.array(grid_size)
     overlap = np.array(overlap)
     if row is not None and col is not None:

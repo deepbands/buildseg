@@ -34,7 +34,7 @@ from qgis.utils import iface
 from qgis.core import QgsMapLayerType
 from .utils import *
 # DEBUG
-import cv2
+# import cv2
 
 
 class buildSeg:
@@ -249,3 +249,6 @@ class buildSeg:
                 showgeoms([build_bound], "build_bound", proj=proj)
             else:
                 print("The current active layer is not a raster layer")
+        # Reset model params
+        self.infer_worker.reset_model()
+        self.dlg.edtParams.setText("")

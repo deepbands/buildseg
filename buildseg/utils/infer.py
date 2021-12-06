@@ -4,20 +4,39 @@ import paddle.inference as paddle_infer
 
 
 class InferWorker(object):
-    def __init__(self, model_file, params_path, size=512):
+    def __init__(self, model_file, params_path, size=512, use_gpu=True):
         super(InferWorker, self).__init__()
         if model_file is not None and params_path is not None:
-            self.load_model(model_file, params_path)
+            self.load_model(model_file, params_path, use_gpu)
         self.size = (size, size) if isinstance(size, int) else size
         _mean=[0.5] * 3
         _std=[0.5] * 3
         self._mean = np.float32(np.array(_mean).reshape(-1, 1, 1))
         self._std = np.float32(np.array(_std).reshape(-1, 1, 1))
 
-    def load_model(self, model_file, params_path):
+    def load_model(self, model_file, params_path, use_gpu=True):
         config = paddle_infer.Config(model_file, params_path)  # Create config
-        config.enable_use_gpu(200, 0)
+        if not use_gpu:
+            config.enable_mkldnn()
+            config.enable_mkldnn_bfloat16()
+            config.switch_ir_optim(True)
+            config.set_cpu_math_library_num_threads(10)
+        else:
+            config.enable_use_gpu(500, 0)
+            config.switch_ir_optim()
+            config.enable_memory_optim()
+            config.enable_tensorrt_engine(
+                workspace_size=1 << 30,
+                precision_mode=paddle_infer.PrecisionType.Float32,
+                max_batch_size=1,
+                min_subgraph_size=5,
+                use_static=False,
+                use_calib_mode=False
+            )
         self.predictor = paddle_infer.create_predictor(config)  # Create predictor from config
+
+    def reset_model(self):
+        self.predictor = None
 
     def __preprocess(self, img):
         h, w = img.shape[:2]
