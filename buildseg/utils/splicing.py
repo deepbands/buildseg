@@ -6,12 +6,7 @@ def create_grids(ysize, xsize, grid_size=[512, 512], overlap=[24, 24]):
     img_size = np.array([ysize, xsize])
     grid_size = np.array(grid_size)
     overlap = np.array(overlap)
-    remainder = np.mod(img_size, grid_size)  # Mod
-    grid_count = np.ceil((img_size + overlap) / grid_size)
-    for i in range(2):
-        if remainder[i] > overlap[i]:
-            grid_count[i] += 1
-    # grid_count = np.ceil((img_size + overlap) / grid_size)
+    grid_count = np.ceil(img_size / (grid_size - overlap))
     grid_count = grid_count.astype("uint16")
     mask_grids = [[np.zeros(grid_size) \
                    for _ in range(grid_count[1])] for _ in range(grid_count[0])]

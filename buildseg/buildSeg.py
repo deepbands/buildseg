@@ -231,6 +231,7 @@ class buildSeg:
                 xsize, ysize = layers.width(), layers.height()
                 grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
                 number = grid_count[0] * grid_count[1]
+                # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")  # test
                 print("Start block processing")
                 for i in range(grid_count[0]):
                     for j in range(grid_count[1]):
