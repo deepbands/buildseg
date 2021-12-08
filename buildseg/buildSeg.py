@@ -30,9 +30,9 @@ from .resources import *
 from .buildSeg_dialog import buildSegDialog
 import os.path
 # tools
-from qgis.utils import iface
+# from qgis.utils import iface
 from qgis.core import QgsMapLayerType, QgsMapLayerProxyModel
-import processing, tempfile
+# import processing, tempfile
 from .utils import *
 # DEBUG
 # import cv2
