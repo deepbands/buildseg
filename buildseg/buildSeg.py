@@ -70,7 +70,6 @@ class buildSeg:
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
-        self.first_start = None
         self.param_file = None
         self.model_file = None
         self.infer_worker = None
@@ -174,9 +173,9 @@ class buildSeg:
             text=self.tr(u'buildseg bar'),
             callback=self.run,
             parent=self.iface.mainWindow())
-
-        # will be set False in run()
-        self.first_start = True
+        
+        # initialization
+        self.infer_worker = None
 
 
     def unload(self):
@@ -206,11 +205,7 @@ class buildSeg:
 
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
-        if self.first_start == True:
-            self.first_start = False
-            self.dlg = buildSegDialog()
-            # initialization
-            self.infer_worker = None
+        self.dlg = buildSegDialog()
         # Add event
         self.dlg.btnParams.clicked.connect(self.select_params_file)
 
@@ -252,5 +247,6 @@ class buildSeg:
             else:
                 print("The current active layer is not a raster layer")
         # Reset model params
+        # TODO: Do you need to save the model loading without repeated loading
         self.infer_worker.reset_model()
         self.dlg.edtParams.setText("")
