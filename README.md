@@ -48,7 +48,7 @@ git clone git@github.com:geoyee/buildseg.git
 - [ ] Hole digging inside the polygons.
 - [ ] Convert raster to Shapefile/GeoJson by GDAL/OGR (gdal.Polygonize) instead of findContours in OpenCV.
 - [ ] Update plugin's UI :
-    - [ ] Add menu to select one raster file from QGIS opened raster layers.
+    - [X] Add menu to select one raster file from QGIS opened raster layers.
     - [ ] Select the Parameter path one time (some buggy windows appear when importing the \*.pdiparams file).
     - [ ] Define the output path of the vector file (Direct Path or Temporary in the memory).
 - [ ] Accelerate, etc.
