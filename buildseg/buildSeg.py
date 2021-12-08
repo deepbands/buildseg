@@ -31,7 +31,8 @@ from .buildSeg_dialog import buildSegDialog
 import os.path
 # tools
 from qgis.utils import iface
-from qgis.core import QgsMapLayerType
+from qgis.core import QgsMapLayerType, QgsMapLayerProxyModel
+import processing, tempfile
 from .utils import *
 # DEBUG
 # import cv2
@@ -208,6 +209,7 @@ class buildSeg:
         self.dlg = buildSegDialog()
         # Add event
         self.dlg.btnParams.clicked.connect(self.select_params_file)
+        self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
 
         # show the dialog
         self.dlg.show()
@@ -219,7 +221,8 @@ class buildSeg:
         if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            layers = iface.activeLayer()  # Get the currently active layer
+            # layers = iface.activeLayer()  # Get the currently active layer
+            layers = self.dlg.mMapLayerComboBoxR.currentLayer() # Get the selected raster layer
             proj = layers.crs()
             grid_size = [512, 512]
             overlap = [24, 24]
