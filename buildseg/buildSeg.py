@@ -23,7 +23,7 @@
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QFileDialog
+from qgis.PyQt.QtWidgets import QAction
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
@@ -31,9 +31,10 @@ from .buildSeg_dialog import buildSegDialog
 import os.path
 # tools
 # from qgis.utils import iface
-from qgis.core import QgsMapLayerType, QgsMapLayerProxyModel
+from qgis.core import QgsMapLayerType, QgsMapLayerProxyModel, QgsVectorFileWriter
 # import processing, tempfile
 from .utils import *
+import os.path as osp
 # DEBUG
 # import cv2
 
@@ -74,6 +75,11 @@ class buildSeg:
         self.param_file = None
         self.model_file = None
         self.infer_worker = None
+        self.save_shp_path = None
+
+        # Init block and overlap size
+        self.block_size_list = [512]
+        self.overlap_size_list = [2, 4, 8, 16, 32, 64, 128, 256]
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -190,15 +196,19 @@ class buildSeg:
 
     # Load parameters
     def select_params_file(self):
-        filename, _ = QFileDialog.getOpenFileName(
-            self.dlg, "Select parameter path", "", "*.pdiparams")
-        self.dlg.edtParams.setText(filename)
-        self.param_file = filename
+        self.param_file = self.dlg.mQfwParams.filePath()
         self.model_file = self.param_file.replace(".pdiparams", ".pdmodel")
-        if self.infer_worker is not None:
-            self.infer_worker.load_model(self.model_file, self.param_file, \
-                                         use_gpu=self.dlg.ccbGPU.isChecked())
-            print("Parameters loaded successfully")
+        if osp.exists(self.model_file):
+            if self.infer_worker is not None:
+                self.infer_worker.load_model(self.model_file, self.param_file, \
+                                            use_gpu=self.dlg.ccbGPU.isChecked())
+                print("Parameters loaded successfully")
+        else:
+            print(f"Parameters loaded unsuccessfully, not find {self.model_file}")
+
+    
+    def select_shp_save(self):
+        self.save_shp_path = self.dlg.mQfwShape.filePath()
 
 
     def run(self):
@@ -208,11 +218,21 @@ class buildSeg:
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         self.dlg = buildSegDialog()
         # Add event
-        self.dlg.btnParams.clicked.connect(self.select_params_file)
+        # self.dlg.btnParams.clicked.connect(self.select_params_file)
+        self.dlg.mQfwParams.setFilter("*.pdiparams")
+        self.dlg.mQfwShape.setFilter("*.shp")
+        # TODO: How to add more filters
+        # [i.driverName for i in QgsVectorFileWriter.ogrDriverList()]
+        self.dlg.mQfwShape.setFilePath("[Temporarily Save]")
+        self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
+        self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
         self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
 
         # show the dialog
         self.dlg.show()
+        self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
+        self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
+        self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
         self.infer_worker = InferWorker(self.model_file, self.param_file, \
                                         use_gpu=self.dlg.ccbGPU.isChecked())
         # Run the dialog event loop
@@ -223,9 +243,9 @@ class buildSeg:
             # substitute with your code.
             # layers = iface.activeLayer()  # Get the currently active layer
             layers = self.dlg.mMapLayerComboBoxR.currentLayer() # Get the selected raster layer
+            grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
+            overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
             proj = layers.crs()
-            grid_size = [512, 512]
-            overlap = [24, 24]
             # If this layer is a raster layer
             if layers.type() == QgsMapLayerType.RasterLayer:
                 xsize, ysize = layers.width(), layers.height()
@@ -246,10 +266,15 @@ class buildSeg:
                 print("Start to extract the boundary")
                 build_bound = bound2shp(get_polygon(mask), 
                                         get_transform(layers))
-                showgeoms([build_bound], "build_bound", proj=proj)
+                
+                vl = showgeoms([build_bound], "build_bound", proj=proj)
+                if self.save_shp_path is not None:
+                    QgsVectorFileWriter.writeAsVectorFormat(
+                        vl, self.save_shp_path, "utf-8", 
+                        driverName="ESRI Shapefile")
+                        # QgsVectorFileWriter.driverForExtension(self.save_shp_path)
+                    print(f"Save the Shapefile in {self.save_shp_path}")
             else:
                 print("The current active layer is not a raster layer")
         # Reset model params
-        # TODO: Do you need to save the model loading without repeated loading
         self.infer_worker.reset_model()
-        self.dlg.edtParams.setText("")

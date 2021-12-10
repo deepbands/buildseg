@@ -57,6 +57,7 @@ git clone git@github.com:geoyee/buildseg.git
 - [ ] Update plugin's UI :
     - [X] Add menu to select one raster file from QGIS opened raster layers.
     - [ ] Select the Parameter path one time (some buggy windows appear when importing the \*.pdiparams file).
-    - [ ] Define the output path of the vector file (Direct Path or Temporary in the memory).
+    - [x] Define the output path of the vector file (Direct Path or Temporary in the memory).
+    - [x] Add setting about used GPU / block size and overlap size.
 - [ ] Accelerate, etc.
 - [ ] Add another model, like Vision Transform.

@@ -33,6 +33,7 @@ def showgeoms(geoms, name="tmp", gtype=None, proj=None):
         vl.setCrs(proj)
     QgsProject.instance().addMapLayer(vl)
     iface.zoomFull()
+    return vl
 
 
 def get_transform(layer):
