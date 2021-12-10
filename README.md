@@ -1,11 +1,19 @@
-# buildseg
+<div align="center">
+  <article style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <p align="center"><img width="300" src="./docs/img/logo.png" /></p>
+      <h1 style="width: 100%; text-align: center;">buildseg</h1>
+      <p>buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle.</p>
+  </article>
+</div>
+
 [![Python 3.8](https://img.shields.io/badge/python-3.8-red.svg)](https://www.python.org/downloads/release/python-360/) [![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2-green.svg)](https://www.python.org/downloads/release/python-360/) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
-buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle.
+## Effect
 
 ![fds](https://user-images.githubusercontent.com/71769312/144746418-cdbb2d5a-32f8-49e3-bc42-d5d2d3e6810f.gif)
 
 ## How to use
+
 1. Download and install [QGIS](https://www.qgis.org/en/site/) and clone the repo :
 ``` git
 git clone git@github.com:geoyee/buildseg.git
