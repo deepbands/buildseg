@@ -49,6 +49,8 @@ git clone git@github.com:deepbands/buildseg.git
 
 ## TODO
 
+### v0.1
+
 - [x] Extract building on 512x512 remote sensing images.
 - [x] Extract building on big remote sensing images through splitting it into small tiles, extract buildings then mosaic it back (merge) to a full extent.
 - [x] Replace the model and parameters (large-scale data).
@@ -64,3 +66,9 @@ git clone git@github.com:deepbands/buildseg.git
 - [ ] Accelerate, etc.
 - [ ] Add another model, like Vision Transform.
 - [x] Add license.
+
+### v0.2
+
+- [ ] Add online map tiles support:
+    - [ ] Extract building on raster in memory.
+    - [ ] Add vector range selection.
