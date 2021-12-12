@@ -21,6 +21,7 @@
  *                                                                         *
  ***************************************************************************/
 """
+from genericpath import exists
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
@@ -30,13 +31,18 @@ from .resources import *
 from .buildSeg_dialog import buildSegDialog
 import os.path
 # tools
-from qgis.utils import iface
+# from qgis.utils import iface
 from qgis.core import QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject
 from .utils import *
 import os.path as osp
-# DEBUG
+
+try:
+    from osgeo import gdal
+except ImportError:
+    import gdal
+    
+# # DEBUG
 # import cv2
-from osgeo import gdal
 
 
 class buildSeg:
@@ -177,7 +183,7 @@ class buildSeg:
         icon_path = ':/plugins/buildSeg/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'buildseg bar'),
+            text=self.tr(u'buildseg'),
             callback=self.run,
             parent=self.iface.mainWindow())
         
@@ -243,14 +249,13 @@ class buildSeg:
             grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
             overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
             currentrasterlay = self.dlg.mMapLayerComboBoxR.currentText()  # Get the selected raster layer
-            rlayers = QgsProject.instance().mapLayersByName(currentrasterlay)
-            fn_ras = rlayers[0]
+            # open raster to get tf and proj
+            fn_ras = QgsProject.instance().mapLayersByName(currentrasterlay)[0]
             ras_path = str(fn_ras.dataProvider().dataSourceUri())
             ras_ds = gdal.Open(ras_path)
             geot = ras_ds.GetGeoTransform()
             proj = ras_ds.GetProjection()
             # proj = layers.crs()
-
             # If this layer is a raster layer
             xsize, ysize = layers.width(), layers.height()
             grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
@@ -278,6 +283,6 @@ class buildSeg:
             #         driverName="ESRI Shapefile")
             #     print(f"Save the Shapefile in {self.save_shp_path}")
             # # raster to shapefile used GDAL
-            polygonize_raster(mask, self.save_shp_path, get_transform(layers, False), proj, geot, False)
+            polygonize_raster(mask, self.save_shp_path, proj, geot, False)
         # Reset model params
         self.infer_worker.reset_model()

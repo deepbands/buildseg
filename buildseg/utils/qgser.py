@@ -4,9 +4,9 @@ import numpy as np
 from .convert import convert_coord
 
 try:
-    import gdal
-except:
     from osgeo import gdal
+except ImportError:
+    import gdal
 
 
 def __getgtypes():
@@ -36,17 +36,14 @@ def showgeoms(geoms, name="tmp", gtype=None, proj=None):
     return vl
 
 
-def get_transform(layer, m_3x3=True):
+def get_transform(layer):
     gd = gdal.Open(str(layer.source()))
     tf = gd.GetGeoTransform()
-    if m_3x3:
-        tform = np.zeros((3, 3))
-        tform[0, :] = np.array([tf[1], tf[2], tf[0]])
-        tform[1, :] = np.array([tf[4], tf[5], tf[3]])
-        tform[2, :] = np.array([0, 0, 1])
-        return tform
-    else:
-        return tf
+    tform = np.zeros((3, 3))
+    tform[0, :] = np.array([tf[1], tf[2], tf[0]])
+    tform[1, :] = np.array([tf[4], tf[5], tf[3]])
+    tform[2, :] = np.array([0, 0, 1])
+    return tform
 
 
 def __bound2wkt(bound_points, tform):

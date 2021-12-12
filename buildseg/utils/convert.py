@@ -2,9 +2,9 @@ import numpy as np
 from .raster2uint8 import raster_to_uint8
 
 try:
-    import gdal
-except:
     from osgeo import gdal
+except ImportError:
+    import gdal
 
 
 # def raster2ndarray(lyr):
