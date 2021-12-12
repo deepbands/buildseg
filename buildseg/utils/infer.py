@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from .postpro import *
 import paddle.inference as paddle_infer
 
 
@@ -49,6 +50,15 @@ class InferWorker(object):
         img = img.reshape([1, C, H, W])
         return img
 
+    def __postprocess(self, img):
+        # 1. Open / Close operation: noise removal / hole filling
+        img = open_and_close_op(img)
+        # 2. Delete small connected area
+        img = del_samll_area(img)
+        # 3. Boundary smoothing
+        img = bound_smooth(img)
+        return img
+
     def infer(self, img, binary=False):
         # Get name of input
         input_names = self.predictor.get_input_names()
@@ -64,6 +74,7 @@ class InferWorker(object):
         output_handle = self.predictor.get_output_handle(output_names[0])
         output_data = output_handle.copy_to_cpu()  # Convert ndarray
         result = np.squeeze(output_data.astype("uint8"))
+        result = self.__postprocess(result)
         if binary is False:
            result *= 255
         return result

@@ -68,7 +68,7 @@ git clone git@github.com:deepbands/buildseg.git
     - [x] Use GDAL/OGR instead of OpenCV.
     - [ ] Block stacking and saving.
 - [ ] Add simplify:
-    - [ ] Mask post processing, like Open/Close operation, condition for pixel size and etc.
+    - [x] Mask post processing, like Open/Close operation, condition for pixel size and etc.
     - [ ] Vector boundary simplification used GDAL.
 - [ ] Add another model, like Vision Transform.
 - [x] Add license.
