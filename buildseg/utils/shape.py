@@ -31,7 +31,7 @@ def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True):
     drv = ogr.GetDriverByName("ESRI Shapefile")
     dst_ds = drv.CreateDataSource(shp_save_path)
     prosrs = osr.SpatialReference(wkt=ds.GetProjection())
-    ESPGValue = prosrs.GetAttrValue('AUTHORITY', 1)
+    ESPGValue = prosrs.GetAttrValue("AUTHORITY", 1)
     sr = osr.SpatialReference()
     sr.ImportFromEPSG(int(ESPGValue))
     dst_layer = dst_ds.CreateLayer("Building boundary", geom_type=ogr.wkbPolygon, srs=sr)
