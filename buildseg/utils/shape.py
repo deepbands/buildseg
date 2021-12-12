@@ -34,7 +34,9 @@ def polygonize_raster(mask, shp_save_path, tf, crs, rm_tmp=True):
     prosrs = osr.SpatialReference()
     prosrs.ImportFromEPSG(crs.srsid())
     geosrs = prosrs.CloneGeogCS()
+    projFromds = ds.GetProjection()
     dst_layer = dst_ds.CreateLayer("Building boundary", geosrs)
+    dst_layer.SetProjection(projFromds)
     dst_fieldname = "DN"
     fd = ogr.FieldDefn(dst_fieldname, ogr.OFTInteger)
     dst_layer.CreateField(fd)
