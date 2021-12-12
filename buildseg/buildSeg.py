@@ -36,6 +36,7 @@ from .utils import *
 import os.path as osp
 # DEBUG
 # import cv2
+from osgeo import gdal
 
 
 class buildSeg:
@@ -241,7 +242,15 @@ class buildSeg:
             layers = self.dlg.mMapLayerComboBoxR.currentLayer()  # Get the selected raster layer
             grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
             overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
-            proj = layers.crs()
+            currentrasterlay = self.dlg.mMapLayerComboBoxR.currentText()  # Get the selected raster layer
+            rlayers = QgsProject.instance().mapLayersByName(currentrasterlay)
+            fn_ras = rlayers[0]
+            ras_path = str(fn_ras.dataProvider().dataSourceUri())
+            ras_ds = gdal.Open(ras_path)
+            geot = ras_ds.GetGeoTransform()
+            proj = ras_ds.GetProjection()
+            # proj = layers.crs()
+
             # If this layer is a raster layer
             xsize, ysize = layers.width(), layers.height()
             grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
@@ -269,6 +278,6 @@ class buildSeg:
             #         driverName="ESRI Shapefile")
             #     print(f"Save the Shapefile in {self.save_shp_path}")
             # # raster to shapefile used GDAL
-            polygonize_raster(mask, self.save_shp_path, get_transform(layers, False), proj, False)
+            polygonize_raster(mask, self.save_shp_path, get_transform(layers, False), proj, geot, False)
         # Reset model params
         self.infer_worker.reset_model()
