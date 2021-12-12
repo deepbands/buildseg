@@ -30,9 +30,8 @@ from .resources import *
 from .buildSeg_dialog import buildSegDialog
 import os.path
 # tools
-# from qgis.utils import iface
-from qgis.core import QgsMapLayerType, QgsMapLayerProxyModel, QgsVectorFileWriter
-# import processing, tempfile
+from qgis.utils import iface
+from qgis.core import QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject
 from .utils import *
 import os.path as osp
 # DEBUG
@@ -221,9 +220,6 @@ class buildSeg:
         # self.dlg.btnParams.clicked.connect(self.select_params_file)
         self.dlg.mQfwParams.setFilter("*.pdiparams")
         self.dlg.mQfwShape.setFilter("*.shp")
-        # TODO: How to add more filters
-        # [i.driverName for i in QgsVectorFileWriter.ogrDriverList()]
-        self.dlg.mQfwShape.setFilePath("[Temporarily Save]")
         self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
         self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
         self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
@@ -242,39 +238,37 @@ class buildSeg:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             # layers = iface.activeLayer()  # Get the currently active layer
-            layers = self.dlg.mMapLayerComboBoxR.currentLayer() # Get the selected raster layer
+            layers = self.dlg.mMapLayerComboBoxR.currentLayer()  # Get the selected raster layer
             grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
             overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
             proj = layers.crs()
             # If this layer is a raster layer
-            if layers.type() == QgsMapLayerType.RasterLayer:
-                xsize, ysize = layers.width(), layers.height()
-                grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
-                number = grid_count[0] * grid_count[1]
-                # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")  # test
-                print("Start block processing")
-                for i in range(grid_count[0]):
-                    for j in range(grid_count[1]):
-                        img = layer2array(layers, i, j, grid_size, overlap)
-                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".jpg", img)  # test
-                        mask_grids[i][j] = self.infer_worker.infer(img)
-                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".png", mask_grids[i][j])  # test
-                        print(f"-- {i * grid_count[0] + j + 1}/{number} --")
-                print("Start Spliting")
-                mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
-                # cv2.imwrite("C:/Users/Geoyee/Desktop/test.png", mask)  # test
-                print("Start to extract the boundary")
-                build_bound = bound2shp(get_polygon(mask), 
-                                        get_transform(layers))
-                
-                vl = showgeoms([build_bound], "build_bound", proj=proj)
-                if self.save_shp_path is not None:
-                    QgsVectorFileWriter.writeAsVectorFormat(
-                        vl, self.save_shp_path, "utf-8", 
-                        driverName="ESRI Shapefile")
-                        # QgsVectorFileWriter.driverForExtension(self.save_shp_path)
-                    print(f"Save the Shapefile in {self.save_shp_path}")
-            else:
-                print("The current active layer is not a raster layer")
+            xsize, ysize = layers.width(), layers.height()
+            grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
+            number = grid_count[0] * grid_count[1]
+            # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")  # test
+            print("Start block processing")
+            for i in range(grid_count[0]):
+                for j in range(grid_count[1]):
+                    img = layer2array(layers, i, j, grid_size, overlap)
+                    # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".jpg", img)  # test
+                    mask_grids[i][j] = self.infer_worker.infer(img, True)
+                    # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".png", mask_grids[i][j])  # test
+                    print(f"-- {i * grid_count[1] + j + 1}/{number} --")
+            print("Start Spliting")
+            mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
+            # cv2.imwrite("C:/Users/Geoyee/Desktop/test.png", mask)  # test
+            print("Start to extract the boundary")
+            # # raster to shapefile used OpenCV
+            # build_bound = bound2shp(get_polygon(mask), 
+            #                         get_transform(layers))
+            # vl = showgeoms([build_bound], "Building boundary", proj=proj)
+            # if self.save_shp_path is not None:
+            #     QgsVectorFileWriter.writeAsVectorFormat(
+            #         vl, self.save_shp_path, "utf-8", 
+            #         driverName="ESRI Shapefile")
+            #     print(f"Save the Shapefile in {self.save_shp_path}")
+            # # raster to shapefile used GDAL
+            polygonize_raster(mask, self.save_shp_path, get_transform(layers, False), proj, False)
         # Reset model params
         self.infer_worker.reset_model()

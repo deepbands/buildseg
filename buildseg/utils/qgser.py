@@ -36,14 +36,17 @@ def showgeoms(geoms, name="tmp", gtype=None, proj=None):
     return vl
 
 
-def get_transform(layer):
+def get_transform(layer, m_3x3=True):
     gd = gdal.Open(str(layer.source()))
     tf = gd.GetGeoTransform()
-    tform = np.zeros((3, 3))
-    tform[0, :] = np.array([tf[1], tf[2], tf[0]])
-    tform[1, :] = np.array([tf[4], tf[5], tf[3]])
-    tform[2, :] = np.array([0, 0, 1])
-    return tform
+    if m_3x3:
+        tform = np.zeros((3, 3))
+        tform[0, :] = np.array([tf[1], tf[2], tf[0]])
+        tform[1, :] = np.array([tf[4], tf[5], tf[3]])
+        tform[2, :] = np.array([0, 0, 1])
+        return tform
+    else:
+        return tf
 
 
 def __bound2wkt(bound_points, tform):

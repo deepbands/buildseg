@@ -49,7 +49,7 @@ class InferWorker(object):
         img = img.reshape([1, C, H, W])
         return img
 
-    def infer(self, img):
+    def infer(self, img, binary=False):
         # Get name of input
         input_names = self.predictor.get_input_names()
         input_handle = self.predictor.get_input_handle(input_names[0])
@@ -63,7 +63,10 @@ class InferWorker(object):
         output_names = self.predictor.get_output_names()
         output_handle = self.predictor.get_output_handle(output_names[0])
         output_data = output_handle.copy_to_cpu()  # Convert ndarray
-        return np.squeeze(output_data.astype("uint8") * 255)
+        result = np.squeeze(output_data.astype("uint8"))
+        if binary is False:
+           result *= 255
+        return result
 
 
 # test
