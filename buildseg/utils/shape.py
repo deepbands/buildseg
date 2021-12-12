@@ -1,5 +1,5 @@
 import os
-
+from qgis.utils import iface
 try:
     from osgeo import gdal, ogr, osr
 except ImportError:
@@ -39,7 +39,12 @@ def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True):
     fd = ogr.FieldDefn(dst_fieldname, ogr.OFTInteger)
     dst_layer.CreateField(fd)
     gdal.Polygonize(srcband, maskband, dst_layer, 0, [])
+    lyr = dst_ds.GetLayer()
+    lyr.SetAttributeFilter("DN = '0'")
+    for holes in lyr:
+        lyr.DeleteFeature(holes.GetFID())
     dst_ds.Destroy()
     ds = None
     if rm_tmp:
         os.remove(tmp_path)
+    iface.addVectorLayer(shp_save_path, "deepbands", "ogr")
