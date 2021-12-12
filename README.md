@@ -56,14 +56,20 @@ git clone git@github.com:deepbands/buildseg.git
 - [x] Replace the model and parameters (large-scale data).
 - [x] Convert to static weight (\*.pdiparams) instead of dynamic model (\*.pdparams).
 - [x] Add a Jupyter Notebook (\*.ipynb) about how to fine-tune parameters using other's datasets based on  PaddleSeg.
-- [ ] Hole digging inside the polygons.
-- [ ] Convert raster to Shapefile/GeoJson by GDAL/OGR (gdal.Polygonize) instead of findContours in OpenCV.
+- [x] Hole digging inside the polygons.
+- [x] Convert raster to Shapefile/GeoJson by GDAL/OGR (gdal.Polygonize) instead of findContours in OpenCV.
 - [x] Update plugin's UI :
     - [x] Add menu to select one raster file from QGIS opened raster layers.
     - [x] Select the Parameter path one time (some buggy windows appear when importing the \*.pdiparams file).
     - [x] Define the output path of the vector file (Direct Path or Temporary in the memory).
     - [x] Add setting about used GPU / block size and overlap size.
-- [ ] Accelerate, etc.
+- [ ] Accelerate:
+    - [x] PaddlePaddle setting.
+    - [x] Use GDAL/OGR instead of OpenCV.
+    - [ ] Block stacking and saving.
+- [ ] Add simplify:
+    - [ ] Mask post processing, like Open/Close operation, condition for pixel size and etc.
+    - [ ] Vector boundary simplification used GDAL.
 - [ ] Add another model, like Vision Transform.
 - [x] Add license.
 
