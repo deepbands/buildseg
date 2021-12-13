@@ -1,9 +1,9 @@
 <div align="center">
     <article style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        <p align="center"><img width="300" src="./docs/img/logo.png" /></p>
+        <p align="center"><img width="300" src="./img/logo.png" /></p>
         <h1 style="width: 100%; text-align: center;">buildseg：用于建筑提取的QGIS插件</h1>
     </article>
-    <a href="./README.md">English</a> | 简体中文
+    <a href="../README.md">English</a> | 简体中文
 </div>
 
 <br/>
