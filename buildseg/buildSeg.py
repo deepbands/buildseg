@@ -35,6 +35,7 @@ import os.path
 from qgis.core import QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject
 from .utils import *
 import os.path as osp
+from qgis.utils import iface
 
 try:
     from osgeo import gdal
@@ -199,7 +200,6 @@ class buildSeg:
                 action)
             self.iface.removeToolBarIcon(action)
 
-
     # Load parameters
     def select_params_file(self):
         self.param_file = self.dlg.mQfwParams.filePath()
@@ -215,6 +215,7 @@ class buildSeg:
     
     def select_shp_save(self):
         self.save_shp_path = self.dlg.mQfwShape.filePath()
+        self.save_SimplifiedShp_path = self.dlg.mQfwSimplify.filePath()
 
 
     def run(self):
@@ -227,9 +228,12 @@ class buildSeg:
         # self.dlg.btnParams.clicked.connect(self.select_params_file)
         self.dlg.mQfwParams.setFilter("*.pdiparams")
         self.dlg.mQfwShape.setFilter("*.shp")
+        self.dlg.mQfwSimplify.setFilter("*.shp")
         self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
         self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
+        self.dlg.mQfwSimplify.fileChanged.connect(self.select_shp_save)
         self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
+        self.dlg.simplifyPolygs.setChecked(True)
 
         # show the dialog
         self.dlg.show()
@@ -284,5 +288,12 @@ class buildSeg:
             #     print(f"Save the Shapefile in {self.save_shp_path}")
             # # raster to shapefile used GDAL
             polygonize_raster(mask, self.save_shp_path, proj, geot, False)
+            iface.addVectorLayer(self.save_shp_path, "deepbands", "ogr")
+
+            if self.dlg.simplifyPolygs.isChecked():
+                simplifyPolyg(self.save_shp_path, 'C:/Users/Youss/Desktop/Simppppm.shp', 0.2)
+            else :
+                print ('No')
+            iface.addVectorLayer('C:/Users/Youss/Desktop/Simppppm.shp', "deepbands-simplified", "ogr")
         # Reset model params
         self.infer_worker.reset_model()
