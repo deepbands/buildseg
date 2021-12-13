@@ -12,8 +12,6 @@
 
 ![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif)
 
-![fds](https://user-images.githubusercontent.com/71769312/144746418-cdbb2d5a-32f8-49e3-bc42-d5d2d3e6810f.gif)
-
 ## 如何使用
 
 1. 下载并安装[QGIS](https://www.qgis.org/en/site/)，然后克隆这个项目：
