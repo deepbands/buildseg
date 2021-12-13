@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+
+from paddle.fluid.inference.wrapper import Tensor
 from .postpro import *
 import paddle.inference as paddle_infer
 
@@ -59,7 +61,7 @@ class InferWorker(object):
         img = bound_smooth(img)
         return img
 
-    def infer(self, img, binary=False):
+    def infer(self, img, mul_255=True):
         # Get name of input
         input_names = self.predictor.get_input_names()
         input_handle = self.predictor.get_input_handle(input_names[0])
@@ -75,7 +77,7 @@ class InferWorker(object):
         output_data = output_handle.copy_to_cpu()  # Convert ndarray
         result = np.squeeze(output_data.astype("uint8"))
         result = self.__postprocess(result)
-        if binary is False:
+        if mul_255 is True:
            result *= 255
         return result
 

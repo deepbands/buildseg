@@ -3,7 +3,7 @@
         <p align="center"><img width="300" src="./docs/img/logo.png" /></p>
         <h1 style="width: 100%; text-align: center;">buildseg: QGIS plugin for building extraction</h1>
     </article>
-    English | <a href="./README_CN.md">简体中文</a>
+    English | <a href="./docs/README_CN.md">简体中文</a>
 </div>
 
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/downloads/release/python-380/) [![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2-blue.svg)](https://www.python.org/downloads/release/python-360/) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11-green.svg)](https://www.qgis.org/) ![license](https://img.shields.io/github/license/deepbands/buildseg)

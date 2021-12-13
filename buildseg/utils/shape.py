@@ -20,6 +20,7 @@ def __mask2tif(mask, tmp_path, proj, geot):
     return dst_ds
 
 
+# TODO: simplify
 def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True):
     tmp_path = shp_save_path.replace(".shp", ".tif")
     ds = __mask2tif(mask, tmp_path, proj, geot)
@@ -48,3 +49,15 @@ def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True):
     if rm_tmp:
         os.remove(tmp_path)
     iface.addVectorLayer(shp_save_path, "deepbands", "ogr")
+
+
+if __name__ == "__main__":
+    import numpy as np
+    from PIL import Image
+    ras_path = r"C:\Users\Geoyee\Desktop\dd\ras.tif"
+    shp_save_path = r"C:\Users\Geoyee\Desktop\dd\shp.shp"
+    mask = np.asarray(Image.open(ras_path).convert("P"))
+    ras_ds = gdal.Open(ras_path)
+    geot = ras_ds.GetGeoTransform()
+    proj = ras_ds.GetProjection()
+    polygonize_raster(mask, shp_save_path, proj, geot)
