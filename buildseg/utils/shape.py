@@ -1,5 +1,5 @@
 import os
-# from qgis.utils import iface
+from qgis.utils import iface
 try:
     from osgeo import gdal, ogr, osr
 except ImportError:
@@ -21,7 +21,7 @@ def __mask2tif(mask, tmp_path, proj, geot):
 
 
 # TODO: simplify
-def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True):
+def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True, display=True):
     tmp_path = shp_save_path.replace(".shp", ".tif")
     ds = __mask2tif(mask, tmp_path, proj, geot)
     srcband = ds.GetRasterBand(1)
@@ -48,7 +48,8 @@ def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True):
     ds = None
     if rm_tmp:
         os.remove(tmp_path)
-    # iface.addVectorLayer(shp_save_path, "deepbands", "ogr")
+    if display:
+        iface.addVectorLayer(shp_save_path, "deepbands", "ogr")
 
 
 if __name__ == "__main__":

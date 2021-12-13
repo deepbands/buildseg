@@ -215,7 +215,12 @@ class buildSeg:
     
     def select_shp_save(self):
         self.save_shp_path = self.dlg.mQfwShape.filePath()
-        self.save_SimplifiedShp_path = self.dlg.mQfwSimplify.filePath()
+
+
+    def simp_state_change(self, state):
+        self.dlg.lblThreshold.setEnabled(bool(state // 2))
+        self.dlg.mQgsDoubleSpinBox.setEnabled(bool(state // 2))
+
 
 
     def run(self):
@@ -224,16 +229,15 @@ class buildSeg:
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         self.dlg = buildSegDialog()
-        # Add event
-        # self.dlg.btnParams.clicked.connect(self.select_params_file)
+        # Add setting
         self.dlg.mQfwParams.setFilter("*.pdiparams")
         self.dlg.mQfwShape.setFilter("*.shp")
-        self.dlg.mQfwSimplify.setFilter("*.shp")
-        self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
-        self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
-        self.dlg.mQfwSimplify.fileChanged.connect(self.select_shp_save)
         self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
         self.dlg.simplifyPolygs.setChecked(True)
+        # Add event
+        self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
+        self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
+        self.dlg.simplifyPolygs.stateChanged.connect(self.simp_state_change)
 
         # show the dialog
         self.dlg.show()
@@ -287,13 +291,16 @@ class buildSeg:
             #         driverName="ESRI Shapefile")
             #     print(f"Save the Shapefile in {self.save_shp_path}")
             # # raster to shapefile used GDAL
-            polygonize_raster(mask, self.save_shp_path, proj, geot, False)
-            iface.addVectorLayer(self.save_shp_path, "deepbands", "ogr")
-
-            if self.dlg.simplifyPolygs.isChecked():
-                simplifyPolyg(self.save_shp_path, 'C:/Users/Youss/Desktop/Simppppm.shp', 0.2)
+            is_simp = self.dlg.simplifyPolygs.isChecked()
+            polygonize_raster(mask, self.save_shp_path, proj, geot, display=(not is_simp))
+            if is_simp:
+                simp_save_path = osp.join(osp.dirname(self.save_shp_path), \
+                                          osp.basename(self.save_shp_path).replace(".shp", "_simp.shp"))
+                simplifyPolyg(self.save_shp_path, 
+                              simp_save_path, 
+                              self.dlg.mQgsDoubleSpinBox.value())
+                iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
             else :
                 print ('No')
-            iface.addVectorLayer('C:/Users/Youss/Desktop/Simppppm.shp', "deepbands-simplified", "ogr")
         # Reset model params
         self.infer_worker.reset_model()

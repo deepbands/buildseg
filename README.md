@@ -8,7 +8,7 @@
 
 <br/>
 
-[![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/downloads/release/python-380/) [![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2+-blue.svg)](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11+-green.svg)](https://www.qgis.org/) ![license](https://img.shields.io/github/license/deepbands/buildseg)
+[![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/downloads/release/python-380/) [![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2+-blue.svg)](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11+-green.svg)](https://www.qgis.org/) ![license](https://img.shields.io/github/license/deepbands/buildseg) ![release](https://img.shields.io/badge/release-v0.1-red.svg)
 
 buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle, and it useing the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced.
 
@@ -52,34 +52,12 @@ git clone git@github.com:deepbands/buildseg.git
 
 ## TODO
 
-### v0.1
-
-- [x] Extract building on 512x512 remote sensing images.
-- [x] Extract building on big remote sensing images through splitting it into small tiles, extract buildings then mosaic it back (merge) to a full extent.
-- [x] Replace the model and parameters (large-scale data).
-- [x] Convert to static weight (\*.pdiparams) instead of dynamic model (\*.pdparams).
-- [x] Add a Jupyter Notebook (\*.ipynb) about how to fine-tune parameters using other's datasets based on  PaddleSeg.
-- [x] Hole digging inside the polygons.
-- [x] Convert raster to Shapefile/GeoJson by GDAL/OGR (gdal.Polygonize) instead of findContours in OpenCV.
-- [x] Update plugin's UI :
-    - [x] Add menu to select one raster file from QGIS opened raster layers.
-    - [x] Select the Parameter path one time (some buggy windows appear when importing the \*.pdiparams file).
-    - [x] Define the output path of the vector file (Direct Path or Temporary in the memory).
-    - [x] Add setting about used GPU / block size and overlap size.
-    - [X] Define the output path of the simplified shapefile.
-    - [ ] Simplify threshold controle.
-- [ ] Accelerate:
-    - [x] PaddlePaddle setting.
-    - [x] Use GDAL/OGR instead of OpenCV.
-    - [ ] Block stacking and saving.
-- [X] Add simplify:
-    - [x] Mask post processing, like Open/Close operation, condition for pixel size and etc.
-    - [X] Vector boundary simplification used (native:simplifygeometries).
-- [ ] Add another model, like Vision Transform.
-- [x] Add license.
-
 ### v0.2
 
+- [ ] Accelerate:
+    - [ ] PaddlePaddle setting.
+    - [ ] Block stacking and saving.
+- [ ] Add another model, like Vision Transform.
 - [ ] Add online map tiles support:
     - [ ] Extract building on raster in memory.
     - [ ] Add vector range selection.
