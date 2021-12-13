@@ -12,7 +12,7 @@
 
 buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle, and it useing the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced.
 
-![fds](https://user-images.githubusercontent.com/71769312/144746418-cdbb2d5a-32f8-49e3-bc42-d5d2d3e6810f.gif)
+![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif)
 
 ## How to use
 
@@ -45,7 +45,6 @@ git clone git@github.com:deepbands/buildseg.git
 | :----------: | :-------: | :--------: | :----: | :--------: | :----------------: | :----------------------------------------------------------: |
 |    OCRNet    | HRNet_W18 |  512x512   | 89.38% |    46.2    |         /          | [Static Weight](https://cloud.a-boat.cn:2021/share/ot6D3FyY) |
 | SegFormer_B2 |     -     |  512x512   |   /    |     /      |         /          |                              /                               |
-|   HarDNet    |     -     |  512x512   |   /    |     /      |         /          |                              /                               |
 
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
 - We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).

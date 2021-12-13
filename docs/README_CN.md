@@ -10,7 +10,7 @@
 
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/downloads/release/python-380/) [![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2+-blue.svg)](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/windows-pip.html) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11+-green.svg)](https://www.qgis.org/) ![license](https://img.shields.io/github/license/deepbands/buildseg) ![release](https://img.shields.io/badge/release-v0.1-red.svg)
 
-buildseg是一个基于PaddlePaddle的用于建筑提取的QGIS插件，使用PaddleSeg提供的语义分割能力，可以对大片区域进行分块提取并拼接。
+![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif)
 
 ![fds](https://user-images.githubusercontent.com/71769312/144746418-cdbb2d5a-32f8-49e3-bc42-d5d2d3e6810f.gif)
 
@@ -45,7 +45,6 @@ git clone git@github.com:deepbands/buildseg.git
 | :----------: | :-------: | :-----: | :--------: | :------: | :----------: | :-----------------------------------------------------: |
 |    OCRNet    | HRNet_W18 | 512x512 |   89.38%   |   46.2   |      /       | [静态权重](https://cloud.a-boat.cn:2021/share/ot6D3FyY) |
 | SegFormer_B2 |     -     | 512x512 |     /      |    /     |      /       |                            /                            |
-|   HarDNet    |     -     | 512x512 |     /      |    /     |      /       |                            /                            |
 
 - 训练和评估（5千） 数据集：[链接](https://aistudio.baidu.com/aistudio/datasetdetail/102929)。
 - 训练和评估使用 : [AI Studio](https://aistudio.baidu.com/aistudio/index)提供的32G的Tesla V100。
