@@ -66,13 +66,15 @@ git clone git@github.com:deepbands/buildseg.git
     - [x] Select the Parameter path one time (some buggy windows appear when importing the \*.pdiparams file).
     - [x] Define the output path of the vector file (Direct Path or Temporary in the memory).
     - [x] Add setting about used GPU / block size and overlap size.
+    - [X] Define the output path of the simplified shapefile.
+    - [ ] Simplify threshold controle.
 - [ ] Accelerate:
     - [x] PaddlePaddle setting.
     - [x] Use GDAL/OGR instead of OpenCV.
     - [ ] Block stacking and saving.
-- [ ] Add simplify:
+- [X] Add simplify:
     - [x] Mask post processing, like Open/Close operation, condition for pixel size and etc.
-    - [ ] Vector boundary simplification used GDAL.
+    - [X] Vector boundary simplification used (native:simplifygeometries).
 - [ ] Add another model, like Vision Transform.
 - [x] Add license.
 
