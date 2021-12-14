@@ -37,7 +37,7 @@ deprecated=False
 # Since QGIS 3.8, a comma separated list of plugins to be installed
 # (or upgraded) can be specified.
 # Check the documentation for more information.
-# plugin_dependencies=
+# plugin_dependencies=opencv-python, paddlepaddle>=2.2.0
 
 Category of the plugin: Raster, Vector, Database or Web
 # category=

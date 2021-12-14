@@ -152,3 +152,5 @@ static_weight
 *.pdiparams.info
 
 .qt_for_python
+
+*.zip
