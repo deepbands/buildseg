@@ -7,12 +7,12 @@ name=buildSeg
 qgisMinimumVersion=3.0
 description=Deep learning building segmentation
 version=0.1
-author=geoyee
+author=deepbands (Yizhou Chen and Youssef Harby)
 email=geoyee@yeah.net
 
 about=Deep learning building segmentation base on PaddlePaddle.
 
-tracker=https://github.com/deepbands/buildseg
+tracker=https://github.com/deepbands/buildseg/issues
 repository=https://github.com/deepbands/buildseg
 # End of mandatory metadata
 
@@ -23,7 +23,7 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=building segmentation, remote sensing, satellite, artificial intelligence, machine learning, deep learning, feature extraction, classification, digitizing, forest, forestry, roads, building detection, construction detection, agricultural field detection
 
 homepage=https://github.com/deepbands/buildseg
 category=Plugins
