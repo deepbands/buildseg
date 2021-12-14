@@ -1,7 +1,7 @@
 Plugin Builder Results
 
 Your plugin buildSeg was created in:
-    E:\dataFiles\github\buildseg\buildseg
+    E:/dataFiles/github/buildseg/buildseg
 
 Your QGIS plugin directory is located at:
     C:/Users/Geoyee/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins

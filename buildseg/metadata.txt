@@ -5,7 +5,9 @@
 [general]
 name=buildSeg
 qgisMinimumVersion=3.0
-description=Deep learning building segmentation
+description=Deep learning building segmentation.
+
+
 version=0.1
 author=deepbands (Yizhou Chen and Youssef Harby)
 email=geoyee@yeah.net
@@ -23,7 +25,7 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=building segmentation, remote sensing, satellite, artificial intelligence, machine learning, deep learning, feature extraction, classification, digitizing, forest, forestry, roads, building detection, construction detection, agricultural field detection
+tags=python, building segmentation, remote sensing, satellite, deep learning
 
 homepage=https://github.com/deepbands/buildseg
 category=Plugins
@@ -37,7 +39,7 @@ deprecated=False
 # Since QGIS 3.8, a comma separated list of plugins to be installed
 # (or upgraded) can be specified.
 # Check the documentation for more information.
-# plugin_dependencies=opencv-python, paddlepaddle>=2.2.0
+plugin_dependencies=opencv-python, paddlepaddle>=2.2.0
 
 Category of the plugin: Raster, Vector, Database or Web
 # category=
