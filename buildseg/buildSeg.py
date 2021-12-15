@@ -30,7 +30,6 @@ from buildseg import utils
 from .resources import *
 # Import the code for the dialog
 from .buildSeg_dialog import buildSegDialog
-# tools
 # from qgis.utils import iface
 from qgis.core import (
     QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject, Qgis)
@@ -283,7 +282,7 @@ class buildSeg:
             self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
             self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
             self.infer_worker = utils.InferWorker(self.model_file, self.param_file, \
-                                            use_gpu=self.dlg.ccbGPU.isChecked())
+                                                  use_gpu=self.dlg.ccbGPU.isChecked())
             # Run the dialog event loop
             result = self.dlg.exec_()
             # See if OK was pressed
