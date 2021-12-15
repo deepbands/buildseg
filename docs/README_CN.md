@@ -44,7 +44,7 @@ git clone git@github.com:deepbands/buildseg.git
 |     模型     | 骨干网络  | 分辨率  | 平均交并比 | 参数(MB) | 预测耗时(ms) |                          链接                           |
 | :----------: | :-------: | :-----: | :--------: | :------: | :----------: | :-----------------------------------------------------: |
 |    OCRNet    | HRNet_W18 | 512x512 |   89.38%   |   46.2   |      /       | [静态权重](https://cloud.a-boat.cn:2021/share/ot6D3FyY) |
-| SegFormer_B2 |     -     | 512x512 |     /      |    /     |      /       |                            /                            |
+| SegFormer_B2 |     -     | 512x512 |   89.47%   |   104    |      /       | [静态权重](https://cloud.a-boat.cn:2021/share/ujYPq4Hy) |
 
 - 训练和评估（5千） 数据集：[链接](https://aistudio.baidu.com/aistudio/datasetdetail/102929)。
 - 训练和评估使用 : [AI Studio](https://aistudio.baidu.com/aistudio/index)提供的32G的Tesla V100。
@@ -54,7 +54,7 @@ git clone git@github.com:deepbands/buildseg.git
 ### v0.2
 
 - [x] 环境中依赖包的检查。
-- [ ] 添加例如ViT等的其他模型。
+- [x] 添加例如ViT等的其他模型。
 
 - [ ] 加速：
   - [ ] 设置PaddlePaddle预测引擎。

@@ -44,7 +44,7 @@ git clone git@github.com:deepbands/buildseg.git
 |    Model     | Backbone  | Resolution |  mIoU  | Params(MB) | Inference Time(ms) |                            Links                             |
 | :----------: | :-------: | :--------: | :----: | :--------: | :----------------: | :----------------------------------------------------------: |
 |    OCRNet    | HRNet_W18 |  512x512   | 89.38% |    46.2    |         /          | [Static Weight](https://cloud.a-boat.cn:2021/share/ot6D3FyY) |
-| SegFormer_B2 |     -     |  512x512   |   /    |     /      |         /          |                              /                               |
+| SegFormer_B2 |     -     |  512x512   | 89.47% |    104     |         /          | [Static Weight](https://cloud.a-boat.cn:2021/share/ujYPq4Hy) |
 
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
 - We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).
@@ -54,7 +54,7 @@ git clone git@github.com:deepbands/buildseg.git
 ### v0.2
 
 - [x] Environment dependency package check.
-- [ ] Add another model, like Vision Transform.
+- [x] Add another model, like Vision Transform.
 - [ ] Accelerate:
     - [ ] PaddlePaddle setting.
     - [ ] Block stacking and saving.
