@@ -53,10 +53,11 @@ git clone git@github.com:deepbands/buildseg.git
 
 ### v0.2
 
+- [x] Environment dependency package check.
+- [ ] Add another model, like Vision Transform.
 - [ ] Accelerate:
     - [ ] PaddlePaddle setting.
     - [ ] Block stacking and saving.
-- [ ] Add another model, like Vision Transform.
 - [ ] Add online map tiles support:
     - [ ] Extract building on raster in memory.
     - [ ] Add vector range selection.

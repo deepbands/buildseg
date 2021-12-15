@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-
-from paddle.fluid.inference.wrapper import Tensor
 from .postpro import *
 import paddle.inference as paddle_infer
 

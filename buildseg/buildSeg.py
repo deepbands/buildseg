@@ -21,19 +21,19 @@
  *                                                                         *
  ***************************************************************************/
 """
-from genericpath import exists
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
+
+from buildseg import utils
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
 from .buildSeg_dialog import buildSegDialog
-import os.path
 # tools
 # from qgis.utils import iface
-from qgis.core import QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject
-from .utils import *
+from qgis.core import (
+    QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject, Qgis)
 import os.path as osp
 from qgis.utils import iface
 
@@ -60,15 +60,15 @@ class buildSeg:
         # Save reference to the QGIS interface
         self.iface = iface
         # initialize plugin directory
-        self.plugin_dir = os.path.dirname(__file__)
+        self.plugin_dir = osp.dirname(__file__)
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
-        locale_path = os.path.join(
+        locale_path = osp.join(
             self.plugin_dir,
             'i18n',
             'buildSeg_{}.qm'.format(locale))
 
-        if os.path.exists(locale_path):
+        if osp.exists(locale_path):
             self.translator = QTranslator()
             self.translator.load(locale_path)
             QCoreApplication.installTranslator(self.translator)
@@ -79,6 +79,7 @@ class buildSeg:
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
+        self.first_start = None
         self.param_file = None
         self.model_file = None
         self.infer_worker = None
@@ -187,7 +188,9 @@ class buildSeg:
             text=self.tr(u'buildseg'),
             callback=self.run,
             parent=self.iface.mainWindow())
-        
+
+        # will be set False in run()
+        self.first_start = True
         # initialization
         self.infer_worker = None
 
@@ -207,20 +210,50 @@ class buildSeg:
         if osp.exists(self.model_file):
             if self.infer_worker is not None:
                 self.infer_worker.load_model(self.model_file, self.param_file, \
-                                            use_gpu=self.dlg.ccbGPU.isChecked())
+                                             use_gpu=self.dlg.ccbGPU.isChecked())
                 print("Parameters loaded successfully")
         else:
             print(f"Parameters loaded unsuccessfully, not find {self.model_file}")
 
     
+    # Select shapefile save path
     def select_shp_save(self):
         self.save_shp_path = self.dlg.mQfwShape.filePath()
 
 
+    # Simplify chackbox state
     def simp_state_change(self, state):
         self.dlg.lblThreshold.setEnabled(bool(state // 2))
         self.dlg.mQgsDoubleSpinBox.setEnabled(bool(state // 2))
 
+
+    # Check env and message info
+    def check_python_pip_env(self):
+        # print error
+        def __display_error(info_txt):
+            iface.messageBar().pushMessage(
+                info_txt, 
+                level=Qgis.Critical, 
+                duration=5)
+        # check pip package
+        try:
+            import cv2
+            import numpy
+            import paddle
+        except ImportError:
+            __display_error("Please check if `numpy / opencv-python / paddlepaddle` exists in your environment!")
+            self.first_start = True
+            return False
+        # check paddlepaddle's version
+        vers = paddle.__version__.split(".")
+        if int(vers[0]) < 2 or int(vers[1]) < 2:
+            __display_error("Please make sure your paddlepaddle's version is greater than 2.2.0")
+            self.first_start = True
+            return False
+        # global import utils
+        global utils
+        import buildseg.utils as utils
+        return True
 
 
     def run(self):
@@ -228,79 +261,84 @@ class buildSeg:
 
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
-        self.dlg = buildSegDialog()
-        # Add setting
-        self.dlg.mQfwParams.setFilter("*.pdiparams")
-        self.dlg.mQfwShape.setFilter("*.shp")
-        self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
-        self.dlg.simplifyPolygs.setChecked(True)
-        # Add event
-        self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
-        self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
-        self.dlg.simplifyPolygs.stateChanged.connect(self.simp_state_change)
+        if self.first_start == True:
+            self.first_start = False
+            self.dlg = buildSegDialog()
+        # check env
+        check_pass = self.check_python_pip_env()
+        if check_pass is True:
+            # Add setting
+            self.dlg.mQfwParams.setFilter("*.pdiparams")
+            self.dlg.mQfwShape.setFilter("*.shp")
+            self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
+            self.dlg.simplifyPolygs.setChecked(True)
+            # Add event
+            self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
+            self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
+            self.dlg.simplifyPolygs.stateChanged.connect(self.simp_state_change)
 
-        # show the dialog
-        self.dlg.show()
-        self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
-        self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
-        self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
-        self.infer_worker = InferWorker(self.model_file, self.param_file, \
-                                        use_gpu=self.dlg.ccbGPU.isChecked())
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            # layers = iface.activeLayer()  # Get the currently active layer
-            layers = self.dlg.mMapLayerComboBoxR.currentLayer()  # Get the selected raster layer
-            grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
-            overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
-            currentrasterlay = self.dlg.mMapLayerComboBoxR.currentText()  # Get the selected raster layer
-            # open raster to get tf and proj
-            fn_ras = QgsProject.instance().mapLayersByName(currentrasterlay)[0]
-            ras_path = str(fn_ras.dataProvider().dataSourceUri())
-            ras_ds = gdal.Open(ras_path)
-            geot = ras_ds.GetGeoTransform()
-            proj = ras_ds.GetProjection()
-            # proj = layers.crs()
-            # If this layer is a raster layer
-            xsize, ysize = layers.width(), layers.height()
-            grid_count, mask_grids = create_grids(ysize, xsize, grid_size, overlap)
-            number = grid_count[0] * grid_count[1]
-            # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")  # test
-            print("Start block processing")
-            for i in range(grid_count[0]):
-                for j in range(grid_count[1]):
-                    img = layer2array(layers, i, j, grid_size, overlap)
-                    # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".jpg", img)  # test
-                    mask_grids[i][j] = self.infer_worker.infer(img, True)
-                    # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".png", mask_grids[i][j])  # test
-                    print(f"-- {i * grid_count[1] + j + 1}/{number} --")
-            print("Start Spliting")
-            mask = splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
-            # cv2.imwrite("C:/Users/Geoyee/Desktop/test.png", mask)  # test
-            print("Start to extract the boundary")
-            # # raster to shapefile used OpenCV
-            # build_bound = bound2shp(get_polygon(mask), 
-            #                         get_transform(layers))
-            # vl = showgeoms([build_bound], "Building boundary", proj=proj)
-            # if self.save_shp_path is not None:
-            #     QgsVectorFileWriter.writeAsVectorFormat(
-            #         vl, self.save_shp_path, "utf-8", 
-            #         driverName="ESRI Shapefile")
-            #     print(f"Save the Shapefile in {self.save_shp_path}")
-            # # raster to shapefile used GDAL
-            is_simp = self.dlg.simplifyPolygs.isChecked()
-            polygonize_raster(mask, self.save_shp_path, proj, geot, display=(not is_simp))
-            if is_simp:
-                simp_save_path = osp.join(osp.dirname(self.save_shp_path), \
-                                          osp.basename(self.save_shp_path).replace(".shp", "_simp.shp"))
-                simplifyPolyg(self.save_shp_path, 
-                              simp_save_path, 
-                              self.dlg.mQgsDoubleSpinBox.value())
-                iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
-            else :
-                print ('No')
-        # Reset model params
-        self.infer_worker.reset_model()
+            # show the dialog
+            self.dlg.show()
+            self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
+            self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
+            self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
+            self.infer_worker = utils.InferWorker(self.model_file, self.param_file, \
+                                            use_gpu=self.dlg.ccbGPU.isChecked())
+            # Run the dialog event loop
+            result = self.dlg.exec_()
+            # See if OK was pressed
+            if result:
+                # Do something useful here - delete the line containing pass and
+                # substitute with your code.
+                # layers = iface.activeLayer()  # Get the currently active layer
+                layers = self.dlg.mMapLayerComboBoxR.currentLayer()  # Get the selected raster layer
+                grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
+                overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
+                currentrasterlay = self.dlg.mMapLayerComboBoxR.currentText()  # Get the selected raster layer
+                # open raster to get tf and proj
+                fn_ras = QgsProject.instance().mapLayersByName(currentrasterlay)[0]
+                ras_path = str(fn_ras.dataProvider().dataSourceUri())
+                ras_ds = gdal.Open(ras_path)
+                geot = ras_ds.GetGeoTransform()
+                proj = ras_ds.GetProjection()
+                # proj = layers.crs()
+                # If this layer is a raster layer
+                xsize, ysize = layers.width(), layers.height()
+                grid_count, mask_grids = utils.create_grids(ysize, xsize, grid_size, overlap)
+                number = grid_count[0] * grid_count[1]
+                # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")  # test
+                print("Start block processing")
+                for i in range(grid_count[0]):
+                    for j in range(grid_count[1]):
+                        img = utils.layer2array(layers, i, j, grid_size, overlap)
+                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".jpg", img)  # test
+                        mask_grids[i][j] = self.infer_worker.infer(img, True)
+                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".png", mask_grids[i][j])  # test
+                        print(f"-- {i * grid_count[1] + j + 1}/{number} --")
+                print("Start Spliting")
+                mask = utils.splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
+                # cv2.imwrite("C:/Users/Geoyee/Desktop/test.png", mask)  # test
+                print("Start to extract the boundary")
+                # # raster to shapefile used OpenCV
+                # build_bound = bound2shp(get_polygon(mask), 
+                #                         get_transform(layers))
+                # vl = showgeoms([build_bound], "Building boundary", proj=proj)
+                # if self.save_shp_path is not None:
+                #     QgsVectorFileWriter.writeAsVectorFormat(
+                #         vl, self.save_shp_path, "utf-8", 
+                #         driverName="ESRI Shapefile")
+                #     print(f"Save the Shapefile in {self.save_shp_path}")
+                # # raster to shapefile used GDAL
+                is_simp = self.dlg.simplifyPolygs.isChecked()
+                utils.polygonize_raster(mask, self.save_shp_path, proj, geot, display=(not is_simp))
+                if is_simp is True:
+                    simp_save_path = osp.join(osp.dirname(self.save_shp_path), \
+                                            osp.basename(self.save_shp_path).replace(".shp", "_simp.shp"))
+                    utils.simplifyPolyg(self.save_shp_path, 
+                                simp_save_path, 
+                                self.dlg.mQgsDoubleSpinBox.value())
+                    iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
+                else :
+                    print ('No')
+            # Reset model params
+            self.infer_worker.reset_model()

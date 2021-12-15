@@ -20,7 +20,6 @@ def __mask2tif(mask, tmp_path, proj, geot):
     return dst_ds
 
 
-# TODO: simplify
 def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True, display=True):
     tmp_path = shp_save_path.replace(".shp", ".tif")
     ds = __mask2tif(mask, tmp_path, proj, geot)
