@@ -45,10 +45,10 @@ git clone git@github.com:deepbands/buildseg.git
 
 ## Model and Parameter
 
-|    Model     | Backbone  | Resolution |  mIoU  | Params(MB) | Inference Time(ms) |                        Static Weight                         |
-| :----------: | :-------: | :--------: | :----: | :--------: | :----------------: | :----------------------------------------------------------: |
-|    OCRNet    | HRNet_W18 |  512x512   | 89.38% |    46.2    |         /          | [Baidu drive](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [Google drive](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
-| SegFormer_B2 |     -     |  512x512   | 89.47% |    104     |         /          | [Baidu drive](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [Google drive](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
+|                    Model                    | Backbone  | Resolution |  mIoU  | Params(MB) | Inference Time(ms) |                        Static Weight                         |
+| :-----------------------------------------: | :-------: | :--------: | :----: | :--------: | :----------------: | :----------------------------------------------------------: |
+|     [OCRNet](./docs/network/OCRNet.md)      | HRNet_W18 |  512x512   | 89.38% |    46.2    |         /          | [Baidu drive](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [Google drive](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
+| [SegFormer_B2](./docs/network/SegFormer.md) |     -     |  512x512   | 89.47% |    104     |         /          | [Baidu drive](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [Google drive](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
 
 - \*Note : All of Baidu drive's code is : band.
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
