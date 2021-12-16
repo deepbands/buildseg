@@ -33,8 +33,10 @@ from .buildSeg_dialog import buildSegDialog
 # from qgis.utils import iface
 from qgis.core import (
     QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject, Qgis)
-import os.path as osp
 from qgis.utils import iface
+
+import os.path as osp
+import time
 
 try:
     from osgeo import gdal
@@ -287,6 +289,8 @@ class buildSeg:
             result = self.dlg.exec_()
             # See if OK was pressed
             if result:
+                # Start timing
+                time_start = time.time()
                 # Do something useful here - delete the line containing pass and
                 # substitute with your code.
                 # layers = iface.activeLayer()  # Get the currently active layer
@@ -339,5 +343,10 @@ class buildSeg:
                     iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
                 else :
                     print ('No')
-            # Reset model params
-            self.infer_worker.reset_model()
+                # # Reset model params
+                # self.infer_worker.reset_model()
+                time_end = time.time()
+                iface.messageBar().pushMessage(
+                    "The whole operation is performed in less than " + str(time_end - time_start) + " seconds", 
+                    level=Qgis.Info, 
+                    duration=30)

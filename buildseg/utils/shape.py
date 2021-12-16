@@ -31,10 +31,12 @@ def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True, display=True
     drv = ogr.GetDriverByName("ESRI Shapefile")
     dst_ds = drv.CreateDataSource(shp_save_path)
     prosrs = osr.SpatialReference(wkt=ds.GetProjection())
-    ESPGValue = prosrs.GetAttrValue("AUTHORITY", 1)
-    sr = osr.SpatialReference()
-    sr.ImportFromEPSG(int(ESPGValue))
-    dst_layer = dst_ds.CreateLayer("Building boundary", geom_type=ogr.wkbPolygon, srs=sr)
+    # print("proj_1: ", prosrs)  # test
+    # ESPGValue = prosrs.GetAttrValue("AUTHORITY", 1)
+    # sr = osr.SpatialReference()
+    # sr.ImportFromEPSG(int(ESPGValue))
+    # print("proj_2:", sr)  # test
+    dst_layer = dst_ds.CreateLayer("Building boundary", geom_type=ogr.wkbPolygon, srs=prosrs)
     dst_fieldname = "DN"
     fd = ogr.FieldDefn(dst_fieldname, ogr.OFTInteger)
     dst_layer.CreateField(fd)
@@ -55,9 +57,9 @@ if __name__ == "__main__":
     import numpy as np
     from PIL import Image
     ras_path = r"C:\Users\Geoyee\Desktop\dd\ras.tif"
-    shp_save_path = r"C:\Users\Geoyee\Desktop\dd\shp.shp"
+    shp_save_path = r"C:\Users\Geoyee\Desktop\dd\shp_2.shp"
     mask = np.asarray(Image.open(ras_path).convert("P"))
     ras_ds = gdal.Open(ras_path)
     geot = ras_ds.GetGeoTransform()
     proj = ras_ds.GetProjection()
-    polygonize_raster(mask, shp_save_path, proj, geot)
+    polygonize_raster(mask, shp_save_path, proj, geot, display=False)
