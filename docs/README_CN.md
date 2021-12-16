@@ -43,10 +43,10 @@ git clone git@github.com:deepbands/buildseg.git
 
 |     模型     | 骨干网络  | 分辨率  | 平均交并比 | 参数(MB) | 预测耗时(ms) |                           静态权重                           |
 | :----------: | :-------: | :-----: | :--------: | :------: | :----------: | :----------------------------------------------------------: |
-|    OCRNet    | HRNet_W18 | 512x512 |   89.38%   |   46.2   |      /       | [百度](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [谷歌]() |
-| SegFormer_B2 |     -     | 512x512 |   89.47%   |   104    |      /       | [百度](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [谷歌]() |
+|    OCRNet    | HRNet_W18 | 512x512 |   89.38%   |   46.2   |      /       | [百度云盘](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [谷歌云盘]() |
+| SegFormer_B2 |     -     | 512x512 |   89.47%   |   104    |      /       | [百度云盘](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [谷歌云盘]() |
 
-- \*说明：所有的百度网盘提取码均为：band。
+- \*说明：所有的百度云盘提取码均为：band。
 - 训练和评估（5千） 数据集：[链接](https://aistudio.baidu.com/aistudio/datasetdetail/102929)。
 - 训练和评估使用 : [AI Studio](https://aistudio.baidu.com/aistudio/index)提供的32G的Tesla V100。
 
