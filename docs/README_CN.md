@@ -12,7 +12,11 @@
 
 buildseg是一个基于PaddlePaddle的用于建筑提取的QGIS插件，使用PaddleSeg提供的语义分割能力，可以对大片区域进行分块提取并拼接。
 
-![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif)
+|                       OCRNet HRNet_W18                       |                         SegFormer_B2                         |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| ![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif) | ![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif) |
+
+*\*说明：使用的栅格大小为 4983x3475。*
 
 ## 如何使用
 
@@ -56,9 +60,10 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [x] 环境中依赖包的检查。
 - [x] 添加例如ViT等的其他模型。
-
+- [ ] 添加一个关于不同模型特点的说明。
 - [ ] 加速：
   - [ ] 设置PaddlePaddle预测引擎。
+  - [ ] 添加最大像素值计算或者使用GDAL的‘translat / warp’来减小栅格大小
   - [ ] 使用分块拼接和保存。
 - [ ] 添加对在线地图瓦片的支持：
     - [ ] 可以对保存在内存中的栅格图像进行建筑提取。

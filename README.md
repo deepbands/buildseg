@@ -12,7 +12,11 @@
 
 buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle, and it useing the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced.
 
-![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif)
+|                       OCRNet HRNet_W18                       |                         SegFormer_B2                         |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| ![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif) | ![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif) |
+
+*\*Noto : raster size is 4983x3475.*
 
 ## How to use
 
@@ -56,8 +60,10 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [x] Environment dependency package check.
 - [x] Add another model, like Vision Transform.
+- [ ] Add note about different model characteristics.
 - [ ] Accelerate:
     - [ ] PaddlePaddle setting.
+    - [ ] Add maximum pixelsize to calculate / using GDAL 'translat / warp' to make raster smaller.
     - [ ] Block stacking and saving.
 - [ ] Add online map tiles support:
     - [ ] Extract building on raster in memory.
