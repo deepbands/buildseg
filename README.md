@@ -41,11 +41,12 @@ git clone git@github.com:deepbands/buildseg.git
 
 ## Model and Parameter
 
-|    Model     | Backbone  | Resolution |  mIoU  | Params(MB) | Inference Time(ms) |                            Links                             |
+|    Model     | Backbone  | Resolution |  mIoU  | Params(MB) | Inference Time(ms) |                        Static Weight                         |
 | :----------: | :-------: | :--------: | :----: | :--------: | :----------------: | :----------------------------------------------------------: |
-|    OCRNet    | HRNet_W18 |  512x512   | 89.38% |    46.2    |         /          | [Static Weight](https://cloud.a-boat.cn:2021/share/ot6D3FyY) |
-| SegFormer_B2 |     -     |  512x512   | 89.47% |    104     |         /          | [Static Weight](https://cloud.a-boat.cn:2021/share/Dy43jdL2) |
+|    OCRNet    | HRNet_W18 |  512x512   | 89.38% |    46.2    |         /          | [Baidu](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [Google]() |
+| SegFormer_B2 |     -     |  512x512   | 89.47% |    104     |         /          | [Baidu](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [Google]() |
 
+- \*Note : All of Baidu drive's code is : band.
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
 - We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).
 
