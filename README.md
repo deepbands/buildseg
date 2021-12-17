@@ -54,6 +54,15 @@ git clone git@github.com:deepbands/buildseg.git
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
 - We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).
 
+## How to Train
+
+This work is in progress, at present, the relevant documents are as follows :
+
+- [How to make dataset in QGIS](https://github.com/deepbands/deep-learning-datasets-maker)
+
+- [How to train your data in AI Studio](./docs/train/AI Studio.md)
+- [How to convert to static weight (in Chinese)](./docs/train/to_static.md)
+
 ## TODO
 
 ### v0.2

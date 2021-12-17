@@ -54,6 +54,15 @@ git clone git@github.com:deepbands/buildseg.git
 - 训练和评估（5千） 数据集：[链接](https://aistudio.baidu.com/aistudio/datasetdetail/102929)。
 - 训练和评估使用 : [AI Studio](https://aistudio.baidu.com/aistudio/index)提供的32G的Tesla V100。
 
+## 如何训练
+
+这项工作正在进行中，目前相关的文档如下：
+
+- [如何在QGIS中制作数据集](https://github.com/deepbands/deep-learning-datasets-maker)
+
+- [如何在AI Studio训练自己的数据](./docs/train/AI Studio.md)
+- [如何转换为静态图模型](./docs/train/to_static.md)
+
 ## 待办事项
 
 ### v0.2
