@@ -60,7 +60,7 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [如何在QGIS中制作数据集](https://github.com/deepbands/deep-learning-datasets-maker)
 
-- [如何在AI Studio训练自己的数据](./docs/train/AI Studio.md)
+- [如何在AI Studio训练自己的数据](./docs/train/AI_Studio.md)
 - [如何转换为静态图模型](./docs/train/to_static.md)
 
 ## 待办事项

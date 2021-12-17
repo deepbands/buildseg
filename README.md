@@ -60,7 +60,7 @@ This work is in progress, at present, the relevant documents are as follows :
 
 - [How to make dataset in QGIS](https://github.com/deepbands/deep-learning-datasets-maker)
 
-- [How to train your data in AI Studio](./docs/train/AI Studio.md)
+- [How to train your data in AI Studio](./docs/train/AI_Studio.md)
 - [How to convert to static weight (in Chinese)](./docs/train/to_static.md)
 
 ## TODO
