@@ -60,7 +60,9 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [x] 环境中依赖包的检查。
 - [x] 添加例如ViT等的其他模型。
-- [ ] 添加一个关于不同模型特点的说明。
+- [ ] 添加描述说明：
+    - [ ] 关于如何在AI Studio以及本地训练自己的数据。
+    - [ ] 关于不同模型特点的。
 - [ ] 加速：
   - [ ] 设置PaddlePaddle预测引擎。
   - [ ] 添加最大像素值计算或者使用GDAL的‘translat / warp’来减小栅格大小

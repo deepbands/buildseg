@@ -60,7 +60,9 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [x] Environment dependency package check.
 - [x] Add another model, like Vision Transform.
-- [ ] Add note about different model characteristics.
+- [ ] Add note：
+    - [ ] About how to training your data in AI Studio / Local.
+    - [ ] About different model characteristics.
 - [ ] Accelerate:
     - [ ] PaddlePaddle setting.
     - [ ] Add maximum pixelsize to calculate / using GDAL 'translat / warp' to make raster smaller.
