@@ -68,3 +68,6 @@ git clone git@github.com:deepbands/buildseg.git
 - [ ] 添加对在线地图瓦片的支持：
     - [ ] 可以对保存在内存中的栅格图像进行建筑提取。
     - [ ] 添加矢量边界的选择。
+- [x] 在Windows 10/11上测试。
+- [ ] 在Linux上测试。
+- [ ] 在macOS Big Sur+上测试。
