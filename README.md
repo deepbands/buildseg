@@ -14,7 +14,7 @@ buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle, and it 
 
 ![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif)
 
-*\*Noto : raster's size is 4983x3475, and model is SegFormer_B2*
+*\*Noto : raster's size is 4983x3475, and model is SegFormer_B2*.
 
 ## How to use
 
