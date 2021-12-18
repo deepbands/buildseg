@@ -12,11 +12,9 @@
 
 buildseg是一个基于PaddlePaddle的用于建筑提取的QGIS插件，使用PaddleSeg提供的语义分割能力，可以对大片区域进行分块提取并拼接。
 
-|                       OCRNet HRNet_W18                       |                         SegFormer_B2                         |
-| :----------------------------------------------------------: | :----------------------------------------------------------: |
-| ![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif) | ![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif) |
+![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif)
 
-*\*说明：使用的栅格大小为 4983x3475。*
+*\*说明：使用的栅格大小为 4983x3475，且使用的模型为SegFormer_B2。*
 
 ## 如何使用
 
@@ -45,13 +43,24 @@ git clone git@github.com:deepbands/buildseg.git
 
 ## 模型和参数
 
-|     模型     | 骨干网络  | 分辨率  | 平均交并比 | 参数(MB) | 预测耗时(ms) |                           静态权重                           |
-| :----------: | :-------: | :-----: | :--------: | :------: | :----------: | :----------------------------------------------------------: |
-|    OCRNet    | HRNet_W18 | 512x512 |   89.38%   |   46.2   |      /       | [百度云盘](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [谷歌云盘](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
-| SegFormer_B2 |     -     | 512x512 |   89.47%   |   104    |      /       | [百度云盘](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [谷歌云盘](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
+|                         模型                         | 骨干网络  | 分辨率  | 平均交并比 | 参数(MB) | 运行耗时(s) |                           静态权重                           |
+| :--------------------------------------------------: | :-------: | :-----: | :--------: | :------: | :---------: | :----------------------------------------------------------: |
+|    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 | 512x512 |   89.38%   |   46.2   |   269.805   | [百度云盘](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [谷歌云盘](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
+| [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     | 512x512 |   89.47%   |  104.0   |   171.245   | [百度云盘](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [谷歌云盘](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
+|                      BiSeNet_V2                      |     -     | 512x512 |   84.61%   |   8.9    |   49.493    |                           用于测试                           |
 
-- \*说明：所有的百度云盘提取码均为：band。
+- \*说明：
+
+  - 运行耗时测试环境：
+
+    | 处理器                       | 显卡                        | 内存      | 图像大小    |
+    | ---------------------------- | --------------------------- | --------- | ----------- |
+    | Intel Core i7-10750H 2.60GHz | NVIDIA GeForce RTX 2060 6GB | 16GB DDR4 | 4983x3475x3 |
+
+  - 所有的百度云盘提取码均为：band。
+
 - 训练和评估（5千） 数据集：[链接](https://aistudio.baidu.com/aistudio/datasetdetail/102929)。
+
 - 训练和评估使用 : [AI Studio](https://aistudio.baidu.com/aistudio/index)提供的32G的Tesla V100。
 
 ## 如何训练
@@ -61,7 +70,7 @@ git clone git@github.com:deepbands/buildseg.git
 - [如何在QGIS中制作数据集](https://github.com/deepbands/deep-learning-datasets-maker)
 
 - [如何在AI Studio训练自己的数据](./docs/train/AI_Studio.md)
-- [如何转换为静态图模型](./docs/train/to_static.md)
+- [如何转换为静态图模型](./docs/train/to_static_CN.md)
 
 ## 待办事项
 
@@ -79,3 +88,7 @@ git clone git@github.com:deepbands/buildseg.git
 - [ ] 添加对在线地图瓦片的支持：
     - [ ] 可以对保存在内存中的栅格图像进行建筑提取。
     - [ ] 添加矢量边界的选择。
+- [ ] 测试:
+    - [x] 在 Windows 10/11上。
+    - [ ] 在Linux上。
+    - [ ] 在mac OS Big Sur+上。

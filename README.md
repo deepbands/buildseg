@@ -12,11 +12,9 @@
 
 buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle, and it useing the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced.
 
-|                       OCRNet HRNet_W18                       |                         SegFormer_B2                         |
-| :----------------------------------------------------------: | :----------------------------------------------------------: |
-| ![bs001](https://user-images.githubusercontent.com/71769312/145813120-b1f20a02-94da-436d-b8ec-d523bcccb720.gif) | ![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif) |
+![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif)
 
-*\*Noto : raster size is 4983x3475.*
+*\*Noto : raster's size is 4983x3475, and model is SegFormer_B2*
 
 ## How to use
 
@@ -45,13 +43,24 @@ git clone git@github.com:deepbands/buildseg.git
 
 ## Model and Parameter
 
-|                    Model                    | Backbone  | Resolution |  mIoU  | Params(MB) | Inference Time(ms) |                        Static Weight                         |
-| :-----------------------------------------: | :-------: | :--------: | :----: | :--------: | :----------------: | :----------------------------------------------------------: |
-|     [OCRNet](./docs/network/OCRNet.md)      | HRNet_W18 |  512x512   | 89.38% |    46.2    |         /          | [Baidu drive](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [Google drive](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
-| [SegFormer_B2](./docs/network/SegFormer.md) |     -     |  512x512   | 89.47% |    104     |         /          | [Baidu drive](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [Google drive](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
+|                        Model                         | Backbone  | Resolution |  mIoU  | Params(MB) | Running Time(s) |                        Static Weight                         |
+| :--------------------------------------------------: | :-------: | :--------: | :----: | :--------: | :-------------: | :----------------------------------------------------------: |
+|    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 |  512x512   | 89.38% |    46.2    |     269.805     | [Baidu drive](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [Google drive](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
+| [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     |  512x512   | 89.47% |   104.0    |     171.245     | [Baidu drive](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [Google drive](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
+|                      BiSeNet_V2                      |     -     |  512x512   | 84.61% |    8.9     |     49.493      |                         For testing                          |
 
-- \*Note : All of Baidu drive's code is : band.
+- \*Note : 
+
+  - Run time test environment :
+
+    | CPU                          | GPU                         | Memory    | Image size  |
+    | ---------------------------- | --------------------------- | --------- | ----------- |
+    | Intel Core i7-10750H 2.60GHz | NVIDIA GeForce RTX 2060 6GB | 16GB DDR4 | 4983x3475x3 |
+
+  - All of Baidu drive's code is : band.
+
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
+
 - We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).
 
 ## How to Train
@@ -61,7 +70,7 @@ This work is in progress, at present, the relevant documents are as follows :
 - [How to make dataset in QGIS](https://github.com/deepbands/deep-learning-datasets-maker)
 
 - [How to train your data in AI Studio](./docs/train/AI_Studio.md)
-- [How to convert to static weight (in Chinese)](./docs/train/to_static.md)
+- [How to convert to static weight](./docs/train/to_static.md)
 
 ## TODO
 
@@ -79,3 +88,8 @@ This work is in progress, at present, the relevant documents are as follows :
 - [ ] Add online map tiles support:
     - [ ] Extract building on raster in memory.
     - [ ] Add vector range selection.
+
+- [ ] Test:
+  - [x] On Windows 10/11.
+  - [ ] On Linux.
+  - [ ] On mac OS Big Sur+.
