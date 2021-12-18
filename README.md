@@ -68,3 +68,6 @@ git clone git@github.com:deepbands/buildseg.git
 - [ ] Add online map tiles support:
     - [ ] Extract building on raster in memory.
     - [ ] Add vector range selection.
+- [x] Test on Windows 10/11
+- [ ] Test on Linux
+- [ ] Test On macOS Big Sur+
