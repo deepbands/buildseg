@@ -31,6 +31,8 @@ The config file can be written into a YML file according to the parameters durin
     backbone_indices: [0]
   ```
 
+The currently available config file is located in trained/to_ static folder.
+
 ## Convert
 
 Executing the following command in the PaddleSeg's directory after ensuring that PaddleSeg is installed correctly, and the prediction model will be saved in the output folder.

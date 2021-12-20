@@ -31,6 +31,8 @@ output
     backbone_indices: [0]
   ```
 
+目前提供的配置文件位于trained/to_static文件夹。
+
 ## 转换
 
 确保正确安装PaddleSeg后，在PaddleSeg目录下执行如下命令，则预测模型会保存在output文件夹。

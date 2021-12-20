@@ -53,8 +53,8 @@ git clone git@github.com:deepbands/buildseg.git
 
   - Run time test environment :
 
-    | System     |             CPU              |             GPU             |  Memory   | Image size  |
-    | ---------- | :--------------------------: | :-------------------------: | :-------: | :---------: |
+    |   System   |             CPU              |             GPU             |  Memory   | Image size  |
+    | :--------: | :--------------------------: | :-------------------------: | :-------: | :---------: |
     | Windows 10 | Intel Core i7-10750H 2.60GHz | NVIDIA GeForce RTX 2060 6GB | 16GB DDR4 | 4983x3475x3 |
 
   - All of Baidu drive's code is : band.
