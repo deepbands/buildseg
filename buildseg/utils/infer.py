@@ -4,22 +4,30 @@ from .postpro import *
 import paddle.inference as paddle_infer
 
 
+default_setting = {"use_gpu": True, "use_mkldnn": True, "use_bf16": True}
+
+
 class InferWorker(object):
-    def __init__(self, model_file, params_path, size=512, use_gpu=True):
+    def __init__(self, model_file, params_path, size=512, use_setting=default_setting):
         super(InferWorker, self).__init__()
         if model_file is not None and params_path is not None:
-            self.load_model(model_file, params_path, use_gpu)
+            self.load_model(model_file, params_path, use_setting)
         self.size = (size, size) if isinstance(size, int) else size
         _mean=[0.5] * 3
         _std=[0.5] * 3
         self._mean = np.float32(np.array(_mean).reshape(-1, 1, 1))
         self._std = np.float32(np.array(_std).reshape(-1, 1, 1))
 
-    def load_model(self, model_file, params_path, use_gpu=True):
+    def load_model(self, model_file, params_path, use_setting):
         config = paddle_infer.Config(model_file, params_path)  # Create config
+        use_gpu = use_setting["use_gpu"]
+        use_bf16 = use_setting["use_bf16"]
+        use_mkldnn = use_setting["use_mkldnn"]
         if not use_gpu:
-            config.enable_mkldnn()
-            config.enable_mkldnn_bfloat16()
+            if use_mkldnn:
+                config.enable_mkldnn()
+                if use_bf16:
+                    config.enable_mkldnn_bfloat16()
             config.switch_ir_optim(True)
             config.set_cpu_math_library_num_threads(10)
         else:

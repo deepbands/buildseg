@@ -1,5 +1,7 @@
 import os
+import os.path as osp
 from qgis.utils import iface
+
 try:
     from osgeo import gdal, ogr, osr
 except ImportError:
@@ -29,6 +31,8 @@ def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True, display=True
     gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8")
     ogr.RegisterAll()
     drv = ogr.GetDriverByName("ESRI Shapefile")
+    if osp.exists(shp_save_path):
+        os.remove(shp_save_path)
     dst_ds = drv.CreateDataSource(shp_save_path)
     prosrs = osr.SpatialReference(wkt=ds.GetProjection())
     # print("proj_1: ", prosrs)  # test

@@ -88,7 +88,8 @@ class buildSeg:
 
         # Init block and overlap size
         self.block_size_list = [512]
-        self.overlap_size_list = [2, 4, 8, 16, 32, 64, 128, 256]
+        self.overlap_size_list = [(2 ** i) for i in range(9)]
+        self.scale_list = [(i / 10) for i in range(10, 0, -1)]
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -210,8 +211,12 @@ class buildSeg:
         self.model_file = self.param_file.replace(".pdiparams", ".pdmodel")
         if osp.exists(self.model_file):
             if self.infer_worker is not None:
-                self.infer_worker.load_model(self.model_file, self.param_file, \
-                                             use_gpu=self.dlg.ccbGPU.isChecked())
+                use_setting = {
+                    "use_gpu": self.dlg.ccbGPU.isChecked(), 
+                    "use_mkldnn": self.dlg.ccbMKLDNN.isChecked(),
+                    "use_bf16": self.dlg.ccbBF16.isChecked()
+                }
+                self.infer_worker.load_model(self.model_file, self.param_file, use_setting)
                 print("Parameters loaded successfully")
         else:
             print(f"Parameters loaded unsuccessfully, not find {self.model_file}")
@@ -226,6 +231,25 @@ class buildSeg:
     def simp_state_change(self, state):
         self.dlg.lblThreshold.setEnabled(bool(state // 2))
         self.dlg.mQgsDoubleSpinBox.setEnabled(bool(state // 2))
+
+    # chackbox state
+    def gpu_state_change(self, state):
+        if self.dlg.ccbGPU.isChecked():
+            self.dlg.ccbMKLDNN.setChecked(False)
+            self.dlg.ccbBF16.setChecked(False)
+
+
+    def mkldnn_state_change(self, state):
+        if self.dlg.ccbMKLDNN.isChecked():
+            self.dlg.ccbGPU.setChecked(False)
+        else:
+            self.dlg.ccbBF16.setChecked(False)
+
+
+    def bf16_state_change(self, state):
+        if self.dlg.ccbBF16.isChecked():
+            self.dlg.ccbMKLDNN.setChecked(True)
+            self.dlg.ccbGPU.setChecked(False)
 
 
     # Check env and message info
@@ -257,6 +281,32 @@ class buildSeg:
         return True
 
 
+    def init_setting(self):
+        # Add setting
+        self.dlg.mQfwParams.setFilter("*.pdiparams")
+        self.dlg.mQfwShape.setFilter("*.shp")
+        self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
+        self.dlg.ccbSimplify.setChecked(True)
+        # Add event
+        self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
+        self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
+        self.dlg.ccbSimplify.stateChanged.connect(self.simp_state_change)
+        self.dlg.ccbGPU.stateChanged.connect(self.gpu_state_change)
+        self.dlg.ccbMKLDNN.stateChanged.connect(self.mkldnn_state_change)
+        self.dlg.ccbBF16.stateChanged.connect(self.bf16_state_change)
+        # show the dialog
+        self.dlg.show()
+        self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
+        self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
+        self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
+        self.dlg.cbxScale.addItems([str(s) for s in self.scale_list])
+        self.infer_worker = utils.InferWorker(self.model_file, self.param_file)
+        # # quick test in my computer
+        # self.dlg.cbxScale.setCurrentIndex(5)
+        # self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\dd\test.shp")
+        # self.dlg.mQfwParams.setFilePath(r"E:\dataFiles\github\buildseg\static_weight\bisenet_v2_512x512\model.pdiparams")
+
+
     def run(self):
         """Run method that performs all the real work"""
 
@@ -265,26 +315,10 @@ class buildSeg:
         if self.first_start == True:
             self.first_start = False
             self.dlg = buildSegDialog()
+            self.init_setting()  # init all of widget's settings
         # check env
         check_pass = self.check_python_pip_env()
         if check_pass is True:
-            # Add setting
-            self.dlg.mQfwParams.setFilter("*.pdiparams")
-            self.dlg.mQfwShape.setFilter("*.shp")
-            self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
-            self.dlg.simplifyPolygs.setChecked(True)
-            # Add event
-            self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
-            self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
-            self.dlg.simplifyPolygs.stateChanged.connect(self.simp_state_change)
-
-            # show the dialog
-            self.dlg.show()
-            self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
-            self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
-            self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
-            self.infer_worker = utils.InferWorker(self.model_file, self.param_file, \
-                                                  use_gpu=self.dlg.ccbGPU.isChecked())
             # Run the dialog event loop
             result = self.dlg.exec_()
             # See if OK was pressed
@@ -293,30 +327,37 @@ class buildSeg:
                 time_start = time.time()
                 # Do something useful here - delete the line containing pass and
                 # substitute with your code.
-                # layers = iface.activeLayer()  # Get the currently active layer
-                layers = self.dlg.mMapLayerComboBoxR.currentLayer()  # Get the selected raster layer
+                # Get parameters
                 grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
                 overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
-                currentrasterlay = self.dlg.mMapLayerComboBoxR.currentText()  # Get the selected raster layer
+                scale_rate = float(self.dlg.cbxScale.currentText())
+                print(f"grid_size is {grid_size}, overlap is {overlap}, scale_rate is {scale_rate}")
+                # layers = iface.activeLayer()  # Get the currently active layer
+                current_raster_layer = self.dlg.mMapLayerComboBoxR.currentLayer()  # Get the selected raster layer
+                band_list = current_raster_layer.renderer().usesBands()  # Band used by the current renderer
+                current_raster_layer_name = current_raster_layer.source()  # Get the raster layer path
+                # Add downsample
+                layer_path = utils.dowm_sample(current_raster_layer_name, scale_rate)
                 # open raster to get tf and proj
-                fn_ras = QgsProject.instance().mapLayersByName(currentrasterlay)[0]
-                ras_path = str(fn_ras.dataProvider().dataSourceUri())
-                ras_ds = gdal.Open(ras_path)
+                # fn_ras = QgsProject.instance().mapLayersByName(current_raster_layer_name)[0]
+                # ras_path = str(fn_ras.dataProvider().dataSourceUri())
+                ras_ds = gdal.Open(layer_path)
                 geot = ras_ds.GetGeoTransform()
                 proj = ras_ds.GetProjection()
                 # proj = layers.crs()
                 # If this layer is a raster layer
-                xsize, ysize = layers.width(), layers.height()
+                xsize = ras_ds.RasterXSize
+                ysize = ras_ds.RasterYSize
                 grid_count, mask_grids = utils.create_grids(ysize, xsize, grid_size, overlap)
                 number = grid_count[0] * grid_count[1]
                 # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")  # test
                 print("Start block processing")
                 for i in range(grid_count[0]):
                     for j in range(grid_count[1]):
-                        img = utils.layer2array(layers, i, j, grid_size, overlap)
-                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".jpg", img)  # test
+                        img = utils.layer2array(layer_path, band_list, i, j, grid_size, overlap)
+                        # cv2.imwrite("C:/Users/Geoyee/Desktop/dd/" + str(i) + "-" + str(j) + ".jpg", img)  # test
                         mask_grids[i][j] = self.infer_worker.infer(img, True)
-                        # cv2.imwrite("C:/Users/Geoyee/Desktop/grids/" + str(i) + "-" + str(j) + ".png", mask_grids[i][j])  # test
+                        # cv2.imwrite("C:/Users/Geoyee/Desktop/dd/" + str(i) + "-" + str(j) + ".png", mask_grids[i][j])  # test
                         print(f"-- {i * grid_count[1] + j + 1}/{number} --")
                 print("Start Spliting")
                 mask = utils.splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
@@ -332,14 +373,14 @@ class buildSeg:
                 #         driverName="ESRI Shapefile")
                 #     print(f"Save the Shapefile in {self.save_shp_path}")
                 # # raster to shapefile used GDAL
-                is_simp = self.dlg.simplifyPolygs.isChecked()
+                is_simp = self.dlg.ccbSimplify.isChecked()
                 utils.polygonize_raster(mask, self.save_shp_path, proj, geot, display=(not is_simp))
                 if is_simp is True:
                     simp_save_path = osp.join(osp.dirname(self.save_shp_path), \
                                             osp.basename(self.save_shp_path).replace(".shp", "_simp.shp"))
-                    utils.simplifyPolyg(self.save_shp_path, 
-                                simp_save_path, 
-                                self.dlg.mQgsDoubleSpinBox.value())
+                    utils.simplify_polygon(self.save_shp_path, \
+                                           simp_save_path, \
+                                           self.dlg.mQgsDoubleSpinBox.value())
                     iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
                 else :
                     print ('No')
@@ -347,6 +388,6 @@ class buildSeg:
                 # self.infer_worker.reset_model()
                 time_end = time.time()
                 iface.messageBar().pushMessage(
-                    "The whole operation is performed in less than " + str(time_end - time_start) + " seconds", 
+                    f"The whole operation is performed in less than {str(time_end - time_start)} seconds", 
                     level=Qgis.Info, 
                     duration=30)

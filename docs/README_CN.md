@@ -84,8 +84,8 @@ git clone git@github.com:deepbands/buildseg.git
     - [x] 关于如何在AI Studio以及本地训练自己的数据。
     - [x] 关于不同模型（论文链接）。
 - [ ] 加速：
-  - [ ] 设置PaddlePaddle预测引擎。
-  - [ ] 添加最大像素值计算或者使用GDAL的`translat / warp`来减小栅格大小
+  - [x] 设置PaddlePaddle预测引擎。
+  - [x] 添加最大像素值计算或者使用GDAL的`translat / warp`来减小栅格大小
   - [ ] 使用分块拼接和保存。
 - [ ] 添加对在线地图瓦片的支持：
     - [ ] 可以对保存在内存中的栅格图像进行建筑提取。

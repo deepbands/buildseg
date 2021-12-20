@@ -83,8 +83,8 @@ This work is in progress, at present, the relevant documents are as follows :
     - [x] About how to training your data in AI Studio / Local.
     - [x] About different model (paper's link).
 - [ ] Accelerate:
-    - [ ] PaddlePaddle setting.
-    - [ ] Add maximum pixelsize to calculate / using GDAL `translat / warp` to make raster smaller.
+    - [x] PaddlePaddle setting.
+    - [x] Add maximum pixelsize to calculate / using GDAL `translat / warp` to make raster smaller.
     - [ ] Block stacking and saving.
 - [ ] Add online map tiles support:
     - [ ] Extract building on raster in memory.

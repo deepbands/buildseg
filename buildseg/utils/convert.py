@@ -26,16 +26,18 @@ except ImportError:
 #     return np.array(values)
 
 
-def layer2array(layer, row=None, col=None, grid_size=[512, 512], overlap=[24, 24]):
-    gd = gdal.Open(str(layer.source()))
-    band_list = layer.renderer().usesBands()  # Band used by the current renderer
-    width, height = layer.width(), layer.height()
+def layer2array(sample_path, band_list, row=None, col=None, grid_size=[512, 512], overlap=[24, 24]):
+    # gd = gdal.Open(str(layer.source()))
+    gd = gdal.Open(sample_path)
+    # band_list = layer.renderer().usesBands()  # Band used by the current renderer
+    width = gd.RasterXSize
+    height = gd.RasterYSize
     if gd.RasterCount != 1:
         array_list = []
         for b in band_list:
             band = gd.GetRasterBand(b)
             array_list.append(raster_to_uint8(__get_grid(band, row, col, \
-                                                       width, height, grid_size, overlap)))
+                                                         width, height, grid_size, overlap)))
         array = np.stack(array_list, axis=2)
     else:
         array = raster_to_uint8(__get_grid(gd, row, col, \
