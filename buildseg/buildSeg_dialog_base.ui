@@ -164,13 +164,13 @@
       <widget class="QCheckBox" name="ccbSimplify">
        <property name="minimumSize">
         <size>
-         <width>231</width>
+         <width>0</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>231</width>
+         <width>200</width>
          <height>16777215</height>
         </size>
        </property>
@@ -183,15 +183,31 @@
        <property name="text">
         <string>Simplify polygons</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QLabel" name="lblThreshold">
          <property name="minimumSize">
           <size>
-           <width>96</width>
+           <width>0</width>
            <height>30</height>
           </size>
          </property>
@@ -216,7 +232,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>500</width>
            <height>16777215</height>
           </size>
          </property>

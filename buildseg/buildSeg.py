@@ -286,7 +286,6 @@ class buildSeg:
         self.dlg.mQfwParams.setFilter("*.pdiparams")
         self.dlg.mQfwShape.setFilter("*.shp")
         self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
-        self.dlg.ccbSimplify.setChecked(True)
         # Add event
         self.dlg.mQfwParams.fileChanged.connect(self.select_params_file)  # load params
         self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
