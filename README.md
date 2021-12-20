@@ -60,8 +60,6 @@ git clone git@github.com:deepbands/buildseg.git
   - All of Baidu drive's code is : band.
 
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
-- Testing Dataset : [Link](https://drive.google.com/file/d/1aySfvIzAnQDkVKUkFmyNq8O7p2S3IhUl/view?usp=sharing)
-
 - Testing Dataset : [Baidu drive](https://pan.baidu.com/s/14novqjR7gEXVCLwZkxqepw) | [Google drive](https://drive.google.com/file/d/1aySfvIzAnQDkVKUkFmyNq8O7p2S3IhUl/view?usp=sharing).
 
 - We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).
