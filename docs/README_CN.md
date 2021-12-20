@@ -47,19 +47,21 @@ git clone git@github.com:deepbands/buildseg.git
 | :--------------------------------------------------: | :-------: | :-----: | :--------: | :------: | :---------: | :----------------------------------------------------------: |
 |    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 | 512x512 |   89.38%   |   46.2   |   269.805   | [百度云盘](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [谷歌云盘](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
 | [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     | 512x512 |   89.47%   |  104.0   |   171.245   | [百度云盘](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [谷歌云盘](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
-|                      BiSeNet_V2                      |     -     | 512x512 |   84.61%   |   8.9    |   49.493    |                           用于测试                           |
+|  [BiSeNet_V2](https://arxiv.org/pdf/2004.02147.pdf)  |     -     | 512x512 |   84.61%   |   8.9    |   49.493    |                         目前用于测试                         |
 
 - \*说明：
 
   - 运行耗时测试环境：
 
-    |            处理器            |            显卡             |   内存    |  图像大小   |
-    | :--------------------------: | :-------------------------: | :-------: | :---------: |
-    | Intel Core i7-10750H 2.60GHz | NVIDIA GeForce RTX 2060 6GB | 16GB DDR4 | 4983x3475x3 |
+    | 系统       |            处理器            |            显卡             |   内存    |  图像大小   |
+    | ---------- | :--------------------------: | :-------------------------: | :-------: | :---------: |
+    | Windows 10 | Intel Core i7-10750H 2.60GHz | NVIDIA GeForce RTX 2060 6GB | 16GB DDR4 | 4983x3475x3 |
 
   - 所有的百度云盘提取码均为：band。
 
 - 训练和评估（5千） 数据集：[链接](https://aistudio.baidu.com/aistudio/datasetdetail/102929)。
+
+- 测试样张：[百度云盘](https://pan.baidu.com/s/14novqjR7gEXVCLwZkxqepw) | [谷歌云盘](https://drive.google.com/file/d/1aySfvIzAnQDkVKUkFmyNq8O7p2S3IhUl/view?usp=sharing).
 
 - 训练和评估使用 : [AI Studio](https://aistudio.baidu.com/aistudio/index)提供的32G的Tesla V100。
 
@@ -67,9 +69,9 @@ git clone git@github.com:deepbands/buildseg.git
 
 这项工作正在进行中，目前相关的文档如下：
 
-- [如何在QGIS中制作数据集](https://github.com/deepbands/deep-learning-datasets-maker)
+- [\* 如何在QGIS中制作数据集](https://github.com/deepbands/deep-learning-datasets-maker)
 
-- [如何在AI Studio训练自己的数据](./docs/train/AI_Studio.md)
+- [如何训练自己的数据](./docs/train/train_CN.md)
 - [如何转换为静态图模型](./docs/train/to_static_CN.md)
 
 ## 待办事项
@@ -78,12 +80,12 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [x] 环境中依赖包的检查。
 - [x] 添加例如ViT等的其他模型。
-- [ ] 添加描述说明：
-    - [ ] 关于如何在AI Studio以及本地训练自己的数据。
-    - [ ] 关于不同模型特点的。
+- [x] 添加描述说明：
+    - [x] 关于如何在AI Studio以及本地训练自己的数据。
+    - [x] 关于不同模型（论文链接）。
 - [ ] 加速：
   - [ ] 设置PaddlePaddle预测引擎。
-  - [ ] 添加最大像素值计算或者使用GDAL的‘translat / warp’来减小栅格大小
+  - [ ] 添加最大像素值计算或者使用GDAL的`translat / warp`来减小栅格大小
   - [ ] 使用分块拼接和保存。
 - [ ] 添加对在线地图瓦片的支持：
     - [ ] 可以对保存在内存中的栅格图像进行建筑提取。

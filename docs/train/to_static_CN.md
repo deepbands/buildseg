@@ -42,8 +42,8 @@ set CUDA_VISIBLE_DEVICES=0  # windows
 
 # 导出静态模型
 python export.py \
-       --config configs/bisenet/bisenet_cityscapes_1024x1024_160k.yml \
-       --model_path bisenet/model.pdparams \
+       --config ocrnet_hrnet_w18_512x512.yml \
+       --model_path model.pdparams \
        --save_dir output
 ```
 

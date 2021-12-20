@@ -47,19 +47,21 @@ git clone git@github.com:deepbands/buildseg.git
 | :--------------------------------------------------: | :-------: | :--------: | :----: | :--------: | :-------------: | :----------------------------------------------------------: |
 |    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 |  512x512   | 89.38% |    46.2    |     269.805     | [Baidu drive](https://pan.baidu.com/s/1aQVc3InoUmxoGKSHCitvBw) \| [Google drive](https://drive.google.com/file/d/1LkwvAfIWf_RO4ybSAc_7yLm4hNp_sWjD/view?usp=sharing) |
 | [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     |  512x512   | 89.47% |   104.0    |     171.245     | [Baidu drive](https://pan.baidu.com/s/1QohTl65OmYOU__ESQjcAcg) \| [Google drive](https://drive.google.com/file/d/1Kihnb5yRK0-aNnD_ZHgWUmLJqMzJKq_L/view?usp=sharing) |
-|                      BiSeNet_V2                      |     -     |  512x512   | 84.61% |    8.9     |     49.493      |                         For testing                          |
+|  [BiSeNet_V2](https://arxiv.org/pdf/2004.02147.pdf)  |     -     |  512x512   | 84.61% |    8.9     |     49.493      |                       For testing now                        |
 
 - \*Note : 
 
   - Run time test environment :
 
-    |             CPU              |             GPU             |  Memory   | Image size  |
-    | :--------------------------: | :-------------------------: | :-------: | :---------: |
-    | Intel Core i7-10750H 2.60GHz | NVIDIA GeForce RTX 2060 6GB | 16GB DDR4 | 4983x3475x3 |
+    | System     |             CPU              |             GPU             |  Memory   | Image size  |
+    | ---------- | :--------------------------: | :-------------------------: | :-------: | :---------: |
+    | Windows 10 | Intel Core i7-10750H 2.60GHz | NVIDIA GeForce RTX 2060 6GB | 16GB DDR4 | 4983x3475x3 |
 
   - All of Baidu drive's code is : band.
 
 - Train/Eval(5k) Dataset : [Link](https://aistudio.baidu.com/aistudio/datasetdetail/102929).
+
+- Testing Dataset : [Baidu drive](https://pan.baidu.com/s/14novqjR7gEXVCLwZkxqepw) | [Google drive](https://drive.google.com/file/d/1aySfvIzAnQDkVKUkFmyNq8O7p2S3IhUl/view?usp=sharing).
 
 - We have done all testing and development using : Tesla V100 32G in [AI Studio](https://aistudio.baidu.com/aistudio/index).
 
@@ -67,9 +69,9 @@ git clone git@github.com:deepbands/buildseg.git
 
 This work is in progress, at present, the relevant documents are as follows :
 
-- [How to make dataset in QGIS](https://github.com/deepbands/deep-learning-datasets-maker)
+- [\* How to make dataset in QGIS](https://github.com/deepbands/deep-learning-datasets-maker)
 
-- [How to train your data in AI Studio](./docs/train/AI_Studio.md)
+- [How to train your data](./docs/train/train.md)
 - [How to convert to static weight](./docs/train/to_static.md)
 
 ## TODO
@@ -78,12 +80,12 @@ This work is in progress, at present, the relevant documents are as follows :
 
 - [x] Environment dependency package check.
 - [x] Add another model, like Vision Transform.
-- [ ] Add note：
-    - [ ] About how to training your data in AI Studio / Local.
-    - [ ] About different model characteristics.
+- [x] Add note：
+    - [x] About how to training your data in AI Studio / Local.
+    - [x] About different model (paper's link).
 - [ ] Accelerate:
     - [ ] PaddlePaddle setting.
-    - [ ] Add maximum pixelsize to calculate / using GDAL 'translat / warp' to make raster smaller.
+    - [ ] Add maximum pixelsize to calculate / using GDAL `translat / warp` to make raster smaller.
     - [ ] Block stacking and saving.
 - [ ] Add online map tiles support:
     - [ ] Extract building on raster in memory.
