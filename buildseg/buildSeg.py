@@ -25,7 +25,6 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
-from buildseg import utils
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
@@ -299,7 +298,6 @@ class buildSeg:
         self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
         self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
         self.dlg.cbxScale.addItems([str(s) for s in self.scale_list])
-        self.infer_worker = utils.InferWorker(self.model_file, self.param_file)
         # # quick test in my computer
         # self.dlg.cbxScale.setCurrentIndex(5)
         # self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\dd\test.shp")
@@ -318,6 +316,7 @@ class buildSeg:
         # check env
         check_pass = self.check_python_pip_env()
         if check_pass is True:
+            self.infer_worker = utils.InferWorker(self.model_file, self.param_file)
             # Run the dialog event loop
             result = self.dlg.exec_()
             # See if OK was pressed
