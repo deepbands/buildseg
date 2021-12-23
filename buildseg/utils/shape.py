@@ -1,5 +1,6 @@
 import os
 import os.path as osp
+import numpy as np
 from qgis.utils import iface
 
 try:
@@ -12,9 +13,8 @@ except ImportError:
 
 def __mask2tif(mask, tmp_path, proj, geot):
     row, columns = mask.shape[:2]
-    dim = 1
     driver = gdal.GetDriverByName("GTiff")
-    dst_ds = driver.Create(tmp_path, columns, row, dim, gdal.GDT_UInt16)
+    dst_ds = driver.Create(tmp_path, columns, row, 1, gdal.GDT_UInt16)
     dst_ds.SetGeoTransform(geot)
     dst_ds.SetProjection(proj)
     dst_ds.GetRasterBand(1).WriteArray(mask)
@@ -23,8 +23,12 @@ def __mask2tif(mask, tmp_path, proj, geot):
 
 
 def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True, display=True):
-    tmp_path = shp_save_path.replace(".shp", ".tif")
-    ds = __mask2tif(mask, tmp_path, proj, geot)
+    if type(mask) is np.ndarray:
+        tmp_path = shp_save_path.replace(".shp", ".tif")
+        ds = __mask2tif(mask, tmp_path, proj, geot)
+    else:
+        tmp_path = mask.file_name
+        ds = mask.gdal_data
     srcband = ds.GetRasterBand(1)
     maskband = srcband.GetMaskBand()
     gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES")
@@ -52,6 +56,7 @@ def polygonize_raster(mask, shp_save_path, proj, geot, rm_tmp=True, display=True
     dst_ds.Destroy()
     ds = None
     if rm_tmp:
+        mask.close()
         os.remove(tmp_path)
     if display:
         iface.addVectorLayer(shp_save_path, "deepbands", "ogr")

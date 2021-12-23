@@ -41,7 +41,7 @@ def layer2array(sample_path, band_list, row=None, col=None, grid_size=[512, 512]
         array = np.stack(array_list, axis=2)
     else:
         array = raster_to_uint8(__get_grid(gd, row, col, \
-                                         width, height, grid_size, overlap))
+                                           width, height, grid_size, overlap))
     del gd
     return array
 

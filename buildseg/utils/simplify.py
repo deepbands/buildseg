@@ -18,12 +18,9 @@ def simplify_polygon(infile, outfile, threshold=0.2):
         'OUTPUT':outfile})
 
 
-def dowm_sample(file_path, scale=0.5):
+def dowm_sample(file_path, down_sample_save, scale=0.5):
     if scale == 1.0:
         return file_path
-    path, named = osp.split(file_path)
-    name, ext = osp.splitext(named)
-    down_sample_save = osp.join(path, (name + "_down_sample" + ext))
     dataset = gdal.Open(file_path)
     band_count = dataset.RasterCount
     cols = dataset.RasterXSize
