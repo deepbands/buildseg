@@ -8,7 +8,7 @@ qgisMinimumVersion=3.0
 description=Deep learning building segmentation.
 
 
-version=0.1
+version=0.1.3
 author=deepbands (Yizhou Chen and Youssef Harby)
 email=geoyee@yeah.net
 
