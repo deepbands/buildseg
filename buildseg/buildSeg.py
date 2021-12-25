@@ -81,7 +81,8 @@ class buildSeg:
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
-        self.gui_number = 0
+        self.gui_number = 0  # open one GUI
+        self.check_pass = None  # check ones
         self.param_file = None
         self.model_file = None
         self.infer_worker = None
@@ -194,6 +195,7 @@ class buildSeg:
 
         # will be set False in run()
         self.first_start = True
+        self.check_pass = False
         # initialization
         self.infer_worker = None
 
@@ -272,6 +274,7 @@ class buildSeg:
             if v is None:
                 self.mes_show(f"Please check if \'{k}\' exists in your environment!", 10, "error")
                 self.first_start = True
+                self.check_pass = False
                 return False
             if k == "paddle":  # check paddle's version
                 vers = v.split(".")
@@ -281,6 +284,7 @@ class buildSeg:
                          "greater than 2.2.0. paddlepaddle\'s currently version is {0}".format(v)), 
                         10, "error")
                     self.first_start = True
+                    self.check_pass = False
                     return False
         # global import utils
         global utils
@@ -323,10 +327,9 @@ class buildSeg:
             self.first_start = False
             self.dlg = buildSegDialog()
             self.init_setting()  # init all of widget's settings
+            self.check_pass = self.check_python_pip_env()  # check env
         if self.gui_number == 1:  # avoid multiple startup plugin errors
-            # check env
-            check_pass = self.check_python_pip_env()
-            if check_pass is True:  # env ok
+            if self.check_pass is True:  # env ok
                 self.infer_worker = utils.InferWorker(self.model_file, self.param_file)
                 # Run the dialog event loop
                 result = self.dlg.exec_()
