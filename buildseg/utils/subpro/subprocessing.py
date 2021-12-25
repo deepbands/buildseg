@@ -19,7 +19,7 @@ def check_package_version():
 
 
 # TODO: some paddle's infer code
-def sub_paddle():
+def paddle_infer():
     pass
 
 

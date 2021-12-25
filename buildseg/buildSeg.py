@@ -81,6 +81,7 @@ class buildSeg:
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
+        self.gui_number = 0
         self.param_file = None
         self.model_file = None
         self.infer_worker = None
@@ -206,8 +207,11 @@ class buildSeg:
             self.iface.removeToolBarIcon(action)
 
     
-    def show_info(self, str, time):
-        iface.messageBar().pushMessage(str, level=Qgis.Info, duration=time)
+    def mes_show(self, str, time, mode="info"):
+        if mode == "info":
+            iface.messageBar().pushMessage(str, level=Qgis.Info, duration=time)
+        else:  # mode == "error"
+            iface.messageBar().pushMessage(str, level=Qgis.Critical, duration=time)
 
 
     # Load parameters
@@ -222,9 +226,11 @@ class buildSeg:
                     "use_bf16": self.dlg.ccbBF16.isChecked()
                 }
                 self.infer_worker.load_model(self.model_file, self.param_file, use_setting)
-                self.show_info("Parameters loaded successfully!", 5)
+                self.mes_show("Parameters loaded successfully!", 5)
         else:
-            self.show_info(f"Parameters loaded unsuccessfully, not find {self.model_file}.", 5)
+            self.param_file = None
+            self.model_file = None
+            self.mes_show(f"Parameters loaded unsuccessfully, not find {self.model_file}.", 5)
 
     
     # Select shapefile save path
@@ -260,30 +266,25 @@ class buildSeg:
 
     # Check env and message info
     def check_python_pip_env(self):
-        # print error
-        def __display_error(info_txt):
-            iface.messageBar().pushMessage(
-                info_txt, 
-                level=Qgis.Critical, 
-                duration=10)
         # check pip package
         try:
             packages_version = check_package_version()
         except ImportError:
-            __display_error("Please check if `numpy / opencv-python / paddlepaddle` " + \
-                            "exists in your environment!")
+            self.mes_show("Please check if `numpy / opencv-python / paddlepaddle` " + \
+                     "exists in your environment!", 10, "error")
             self.first_start = True
             return False
         print(f"package\'s version is: {packages_version}")
         vers = packages_version["paddle"].split(".")
         if int(vers[0]) < 2 or int(vers[1]) < 2:
-            __display_error("Please make sure your paddlepaddle\'s version is greater than 2.2.0.")
+            self.mes_show("Please make sure your paddlepaddle\'s version is greater than 2.2.0.", \
+                          10, "error")
             self.first_start = True
             return False
         # global import utils
         global utils
         import buildseg.utils as utils
-        self.show_info("package's version checked!", 5)
+        self.mes_show("package's version checked!", 5)
         return True
 
 
@@ -316,71 +317,85 @@ class buildSeg:
         """Run method that performs all the real work"""
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
+        self.gui_number += 1
         if self.first_start == True:
             self.first_start = False
             self.dlg = buildSegDialog()
             self.init_setting()  # init all of widget's settings
-        # check env
-        check_pass = self.check_python_pip_env()
-        if check_pass is True:  # env ok
-            self.infer_worker = utils.InferWorker(self.model_file, self.param_file)
-            # Run the dialog event loop
-            result = self.dlg.exec_()
-            # See if OK was pressed
-            if result:
-                # Start timing
-                time_start = time.time()
-                # Get parameters
-                grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
-                overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
-                scale_rate = float(self.dlg.cbxScale.currentText())
-                print(f"grid_size is {grid_size}, overlap is {overlap}, scale_rate is {scale_rate}.")
-                # layers = iface.activeLayer()  # Get the currently active layer
-                # Get the selected raster layer
-                current_raster_layer = self.dlg.mMapLayerComboBoxR.currentLayer()
-                # Band used by the current renderer
-                band_list = current_raster_layer.renderer().usesBands()
-                # Get the raster layer path
-                current_raster_layer_name = current_raster_layer.source()
-                # Add downsample
-                down_save_path = self.save_shp_path.replace(".shp", "_dowm.tif")
-                layer_path = utils.dowm_sample(current_raster_layer_name, down_save_path, scale_rate)
-                print(f"layer_path: {layer_path}")
-                ras_ds = gdal.Open(layer_path)
-                geot = ras_ds.GetGeoTransform()
-                proj = ras_ds.GetProjection()
-                # If this layer is a raster layer
-                xsize = ras_ds.RasterXSize
-                ysize = ras_ds.RasterYSize
-                ras_ds = None
-                grid_count = utils.create_grids(ysize, xsize, grid_size, overlap)
-                number = grid_count[0] * grid_count[1]
-                # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")  # test
-                print("Start block processing.")
-                geoinfo = {"row": ysize, "col": xsize, "geot": geot, "proj": proj}
-                mask_save_path = self.save_shp_path.replace(".shp", "_mask.tif")
-                mask = utils.Mask(mask_save_path, geoinfo, grid_size, overlap)
-                for i in range(grid_count[0]):
-                    for j in range(grid_count[1]):
-                        img = utils.layer2array(layer_path, band_list, i, j, grid_size, overlap)
-                        # mask_grids[i][j] = self.infer_worker.infer(img, True)
-                        mask.write_grid(self.infer_worker.infer(img, True), i, j)
-                        print(f"-- {i * grid_count[1] + j + 1}/{number} --.")
-                # self.show_info("Start Spliting.", 5)
-                # mask = utils.splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
-                print("Start generating result file.")
-                # raster to shapefile used GDAL
-                is_simp = self.dlg.ccbSimplify.isChecked()
-                utils.polygonize_raster(mask, self.save_shp_path, proj, geot, \
-                                        display=(not is_simp))
-                if is_simp is True:
-                    simp_save_path = self.save_shp_path.replace(".shp", "_simp.shp")
-                    utils.simplify_polygon(self.save_shp_path, simp_save_path, \
-                                           self.dlg.mQgsDoubleSpinBox.value())
-                    iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
-                # # Reset model params
-                # self.infer_worker.reset_model()
-                time_end = time.time()
-                self.show_info(
-                    f"The whole operation is performed in {str(time_end - time_start)} seconds.", 
-                    30)
+        if self.gui_number == 1:  # avoid multiple startup plugin errors
+            # check env
+            check_pass = self.check_python_pip_env()
+            if check_pass is True:  # env ok
+                self.infer_worker = utils.InferWorker(self.model_file, self.param_file)
+                # Run the dialog event loop
+                result = self.dlg.exec_()
+                # See if OK was pressed
+                if result:
+                    if self.save_shp_path is not None and self.param_file is not None:
+                        # Start timing
+                        time_start = time.time()
+                        # Get parameters
+                        grid_size = [int(self.dlg.cbxBlock.currentText())] * 2
+                        overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
+                        scale_rate = float(self.dlg.cbxScale.currentText())
+                        print(f"grid_size is {grid_size}, overlap is {overlap}, " + \
+                            "scale_rate is {scale_rate}.")
+                        # layers = iface.activeLayer()  # Get the currently active layer
+                        # Get the selected raster layer
+                        current_raster_layer = self.dlg.mMapLayerComboBoxR.currentLayer()
+                        # Band used by the current renderer
+                        band_list = current_raster_layer.renderer().usesBands()
+                        # Get the raster layer path
+                        current_raster_layer_name = current_raster_layer.source()
+                        # Add downsample
+                        down_save_path = self.save_shp_path.replace(".shp", "_dowm.tif")
+                        layer_path = utils.dowm_sample(current_raster_layer_name, \
+                                                    down_save_path, scale_rate)
+                        print(f"layer_path: {layer_path}")
+                        ras_ds = gdal.Open(layer_path)
+                        geot = ras_ds.GetGeoTransform()
+                        proj = ras_ds.GetProjection()
+                        # If this layer is a raster layer
+                        xsize = ras_ds.RasterXSize
+                        ysize = ras_ds.RasterYSize
+                        ras_ds = None
+                        grid_count = utils.create_grids(ysize, xsize, grid_size, overlap)
+                        number = grid_count[0] * grid_count[1]
+                        # print(f"xsize is {xsize}, ysize is {ysize}, grid_count is {grid_count}")
+                        print("Start block processing.")
+                        geoinfo = {"row": ysize, "col": xsize, "geot": geot, "proj": proj}
+                        mask_save_path = self.save_shp_path.replace(".shp", "_mask.tif")
+                        mask = utils.Mask(mask_save_path, geoinfo, grid_size, overlap)
+                        # TODO: move this to subprocessing.py
+                        for i in range(grid_count[0]):
+                            for j in range(grid_count[1]):
+                                img = utils.layer2array(layer_path, band_list, \
+                                                        i, j, grid_size, overlap)
+                                # mask_grids[i][j] = self.infer_worker.infer(img, True)
+                                mask.write_grid(self.infer_worker.infer(img, True), i, j)
+                                print(f"-- {i * grid_count[1] + j + 1}/{number} --.")
+                        # self.mes_show("Start Spliting.", 5)
+                        # mask = utils.splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
+                        print("Start generating result file.")
+                        # raster to shapefile used GDAL
+                        is_simp = self.dlg.ccbSimplify.isChecked()
+                        utils.polygonize_raster(mask, self.save_shp_path, proj, geot, \
+                                                display=(not is_simp))
+                        if is_simp is True:
+                            simp_save_path = self.save_shp_path.replace(".shp", "_simp.shp")
+                            utils.simplify_polygon(self.save_shp_path, simp_save_path, \
+                                                self.dlg.mQgsDoubleSpinBox.value())
+                            iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
+                        # # Reset model params
+                        # self.infer_worker.reset_model()
+                        time_end = time.time()
+                        self.mes_show(
+                            "The whole operation is performed in {0} seconds.".format(
+                                str(time_end - time_start)), 
+                            30)
+                    else:
+                        self.mes_show(
+                            "model_file or params_file is None.", 10, "error")
+        else:
+            self.mes_show("The GUI of the plugin has been displayed.", 5)
+        self.gui_number -= 1
