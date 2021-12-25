@@ -36,7 +36,7 @@ from qgis.utils import iface
 
 import os.path as osp
 import time
-from .utils import check_package_version
+from .subpro import check_package_version
 
 try:
     from osgeo import gdal
@@ -267,20 +267,21 @@ class buildSeg:
     # Check env and message info
     def check_python_pip_env(self):
         # check pip package
-        try:
-            packages_version = check_package_version()
-        except ImportError:
-            self.mes_show("Please check if `numpy / opencv-python / paddlepaddle` " + \
-                     "exists in your environment!", 10, "error")
-            self.first_start = True
-            return False
-        print(f"package\'s version is: {packages_version}")
-        vers = packages_version["paddle"].split(".")
-        if int(vers[0]) < 2 or int(vers[1]) < 2:
-            self.mes_show("Please make sure your paddlepaddle\'s version is greater than 2.2.0.", \
-                          10, "error")
-            self.first_start = True
-            return False
+        packages_version = check_package_version()
+        for k, v in packages_version.items():
+            if v is None:
+                self.mes_show(f"Please check if \'{k}\' exists in your environment!", 10, "error")
+                self.first_start = True
+                return False
+            if k == "paddle":  # check paddle's version
+                vers = v.split(".")
+                if int(vers[0]) < 2 or int(vers[1]) < 2:
+                    self.mes_show(
+                        ("Please make sure your paddlepaddle\'s version is " + \
+                         "greater than 2.2.0. paddlepaddle\'s currently version is {0}".format(v)), 
+                        10, "error")
+                    self.first_start = True
+                    return False
         # global import utils
         global utils
         import buildseg.utils as utils
@@ -390,12 +391,14 @@ class buildSeg:
                         # self.infer_worker.reset_model()
                         time_end = time.time()
                         self.mes_show(
-                            "The whole operation is performed in {0} seconds.".format(
-                                str(time_end - time_start)), 
+                            ("The whole operation is performed in {0} seconds.".format(
+                                str(time_end - time_start))), 
                             30)
                     else:
                         self.mes_show(
                             "model_file or params_file is None.", 10, "error")
+            else:
+                self.dlg.close()
         else:
             self.mes_show("The GUI of the plugin has been displayed.", 5)
         self.gui_number -= 1
