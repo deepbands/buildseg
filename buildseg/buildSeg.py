@@ -36,6 +36,7 @@ from qgis.utils import iface
 
 import os.path as osp
 import time
+from .utils import check_package_version
 
 try:
     from osgeo import gdal
@@ -62,11 +63,11 @@ class buildSeg:
         # initialize plugin directory
         self.plugin_dir = osp.dirname(__file__)
         # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
+        locale = QSettings().value("locale/userLocale")[0:2]
         locale_path = osp.join(
             self.plugin_dir,
-            'i18n',
-            'buildSeg_{}.qm'.format(locale))
+            "i18n",
+            "buildSeg_{}.qm".format(locale))
 
         if osp.exists(locale_path):
             self.translator = QTranslator()
@@ -75,7 +76,7 @@ class buildSeg:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&buildSeg')
+        self.menu = self.tr(u"&buildSeg")
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
@@ -103,7 +104,7 @@ class buildSeg:
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('buildSeg', message)
+        return QCoreApplication.translate("buildSeg", message)
 
 
     def add_action(
@@ -183,10 +184,10 @@ class buildSeg:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/buildSeg/icon.png'
+        icon_path = ":/plugins/buildSeg/icon.png"
         self.add_action(
             icon_path,
-            text=self.tr(u'buildseg'),
+            text=self.tr(u"buildseg"),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -200,9 +201,13 @@ class buildSeg:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&buildSeg'),
+                self.tr(u"&buildSeg"),
                 action)
             self.iface.removeToolBarIcon(action)
+
+    
+    def show_info(self, str, time):
+        iface.messageBar().pushMessage(str, level=Qgis.Info, duration=time)
 
 
     # Load parameters
@@ -217,9 +222,9 @@ class buildSeg:
                     "use_bf16": self.dlg.ccbBF16.isChecked()
                 }
                 self.infer_worker.load_model(self.model_file, self.param_file, use_setting)
-                print("Parameters loaded successfully!")
+                self.show_info("Parameters loaded successfully!", 5)
         else:
-            print(f"Parameters loaded unsuccessfully, not find {self.model_file}.")
+            self.show_info(f"Parameters loaded unsuccessfully, not find {self.model_file}.", 5)
 
     
     # Select shapefile save path
@@ -260,26 +265,25 @@ class buildSeg:
             iface.messageBar().pushMessage(
                 info_txt, 
                 level=Qgis.Critical, 
-                duration=5)
+                duration=10)
         # check pip package
         try:
-            import cv2
-            import numpy
-            import paddle
+            packages_version = check_package_version()
         except ImportError:
             __display_error("Please check if `numpy / opencv-python / paddlepaddle` " + \
                             "exists in your environment!")
             self.first_start = True
             return False
-        # check paddlepaddle's version
-        vers = paddle.__version__.split(".")
+        print(f"package\'s version is: {packages_version}")
+        vers = packages_version["paddle"].split(".")
         if int(vers[0]) < 2 or int(vers[1]) < 2:
-            __display_error("Please make sure your paddlepaddle's version is greater than 2.2.0.")
+            __display_error("Please make sure your paddlepaddle\'s version is greater than 2.2.0.")
             self.first_start = True
             return False
         # global import utils
         global utils
         import buildseg.utils as utils
+        self.show_info("package's version checked!", 5)
         return True
 
 
@@ -362,9 +366,9 @@ class buildSeg:
                         # mask_grids[i][j] = self.infer_worker.infer(img, True)
                         mask.write_grid(self.infer_worker.infer(img, True), i, j)
                         print(f"-- {i * grid_count[1] + j + 1}/{number} --.")
-                print("Start Spliting.")
+                # self.show_info("Start Spliting.", 5)
                 # mask = utils.splicing_grids(mask_grids, ysize, xsize, grid_size, overlap)
-                print("Start to extract the boundary.")
+                print("Start generating result file.")
                 # raster to shapefile used GDAL
                 is_simp = self.dlg.ccbSimplify.isChecked()
                 utils.polygonize_raster(mask, self.save_shp_path, proj, geot, \
@@ -377,7 +381,6 @@ class buildSeg:
                 # # Reset model params
                 # self.infer_worker.reset_model()
                 time_end = time.time()
-                iface.messageBar().pushMessage(
+                self.show_info(
                     f"The whole operation is performed in {str(time_end - time_start)} seconds.", 
-                    level=Qgis.Info, 
-                    duration=30)
+                    30)
