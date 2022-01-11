@@ -10,7 +10,7 @@
 
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/downloads/release/python-380/) [![PaddlePaddle 2.2](https://img.shields.io/badge/paddlepaddle-2.2+-blue.svg)](https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/en/install/pip/windows-pip_en.html) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11+-green.svg)](https://www.qgis.org/) ![license](https://img.shields.io/github/license/deepbands/buildseg) ![release](https://img.shields.io/badge/release-v0.1-red.svg)
 
-buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle, and it useing the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced.
+buildseg is a Building Extraction plugin for QGIS based on PaddlePaddle, and it using the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced.
 
 ![bs002](https://user-images.githubusercontent.com/71769312/146371414-8c325496-d9e2-4f1e-891f-97bf3ca07716.gif)
 
