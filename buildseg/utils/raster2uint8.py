@@ -15,10 +15,10 @@ def raster_to_uint8(image: np.array, dtype: str="uint8") -> np.array:
     dtypes = ["uint8", "uint16", "float32"]
     if dtype not in dtypes:
         raise ValueError(f"'dtype' must be uint8/uint16/float32, not {dtype}.")
-    if dtypes == "uint8":
+    if dtype == "uint8":
         return image
     else:
-        if dtypes == "float32":
+        if dtype == "float32":
             image = __sample_norm(image)
         return __two_percentLinear(image)
 
