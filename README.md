@@ -89,8 +89,9 @@ This work is in progress, at present, the relevant documents are as follows :
     - [x] PaddlePaddle setting.
     - [x] Add maximum pixelsize to calculate / using GDAL `translat / warp` to make raster smaller.
     - [x] Block stacking and saving.
-
-- [ ] Test (research subprocess [#38268](https://github.com/PaddlePaddle/Paddle/issues/38268)) :
+- [ ] Convert PaddlePaddle to ONNX.
+  
+- [ ] Test (try to use ONNX) :
   - [x] On Windows 10/11.
   - [ ] On Linux.
   - [ ] On mac OS Big Sur+.

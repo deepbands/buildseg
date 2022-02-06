@@ -90,8 +90,9 @@ git clone git@github.com:deepbands/buildseg.git
   - [x] 设置PaddlePaddle预测引擎。
   - [x] 添加最大像素值计算或者使用GDAL的`translat / warp`来减小栅格大小
   - [x] 使用分块拼接和保存。
+- [ ] 转换PaddlePaddle为ONNX。
   
-- [ ] 测试（研究子进程 [#38268](https://github.com/PaddlePaddle/Paddle/issues/38268)）：
+- [ ] 测试（尝试使用ONNX）：
     - [x] 在 Windows 10/11上。
     - [ ] 在Linux上。
     - [ ] 在mac OS Big Sur+上。
