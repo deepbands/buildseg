@@ -39,7 +39,7 @@ class InferWorker(object):
                 precision_mode=paddle_infer.PrecisionType.Float32,
                 max_batch_size=1,
                 min_subgraph_size=5,
-                use_static=False,
+                use_static=True,
                 use_calib_mode=False
             )
         self.predictor = paddle_infer.create_predictor(config)  # Create predictor from config

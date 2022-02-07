@@ -4,13 +4,13 @@ import operator
 from functools import reduce
 
 
-def raster_to_uint8(image: np.array, dtype: str="uint8") -> np.array:
+def raster_to_uint8(image: np.ndarray , dtype: str="uint8") -> np.ndarray :
     """ Convert raster to uint8.
     Args:
-        image (np.array): image.
+        image (np.ndarray ): image.
         dtype (str): type of image.
     Returns:
-        np.array: image on uint8.
+        np.ndarray : image on uint8.
     """
     dtypes = ["uint8", "uint16", "float32"]
     if dtype not in dtypes:
@@ -24,7 +24,7 @@ def raster_to_uint8(image: np.array, dtype: str="uint8") -> np.array:
 
 
 # 2% linear stretch
-def __two_percentLinear(image: np.array, max_out: int=255, min_out: int=0) -> np.array:
+def __two_percentLinear(image: np.ndarray , max_out: int=255, min_out: int=0) -> np.ndarray :
     def __gray_process(gray, maxout=max_out, minout=min_out):
         high_value = np.percentile(gray, 98)  # Get the corresponding gray level at 98% histogram
         low_value = np.percentile(gray, 2)
@@ -45,7 +45,7 @@ def __two_percentLinear(image: np.array, max_out: int=255, min_out: int=0) -> np
 
 
 # Simple image standardization
-def __sample_norm(image: np.array, NUMS: int=65536) -> np.array:
+def __sample_norm(image: np.ndarray , NUMS: int=65536) -> np.ndarray :
     if NUMS == 256:
         return np.uint8(image)
     if len(image.shape) == 3 and image.shape[-1] == 3:
@@ -64,7 +64,7 @@ def __sample_norm(image: np.array, NUMS: int=65536) -> np.array:
 
 
 # Histogram equalization
-def __stretch(ima: np.array, NUMS: int) -> np.array:
+def __stretch(ima: np.ndarray , NUMS: int) -> np.ndarray :
     hist = __histogram(ima, NUMS)
     lut = []
     for bt in range(0, len(hist), NUMS):
@@ -80,7 +80,7 @@ def __stretch(ima: np.array, NUMS: int) -> np.array:
 
 
 # Calculate histogram
-def __histogram(ima: np.array, NUMS: int) -> np.array:
+def __histogram(ima: np.ndarray , NUMS: int) -> np.ndarray :
     bins = list(range(0, NUMS))
     flat = ima.flat
     n = np.searchsorted(np.sort(flat), bins)

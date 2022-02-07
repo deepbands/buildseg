@@ -36,7 +36,7 @@ from qgis.utils import iface
 
 import os.path as osp
 import time
-from .subpro import check_package_version
+from buildseg.envs import check_package_version
 
 try:
     from osgeo import gdal
@@ -370,7 +370,6 @@ class buildSeg:
                         geoinfo = {"row": ysize, "col": xsize, "geot": geot, "proj": proj}
                         mask_save_path = self.save_shp_path.replace(".shp", "_mask.tif")
                         mask = utils.Mask(mask_save_path, geoinfo, grid_size, overlap)
-                        # TODO: move this to subprocessing.py
                         for i in range(grid_count[0]):
                             for j in range(grid_count[1]):
                                 img = utils.layer2array(layer_path, band_list, \
@@ -395,8 +394,7 @@ class buildSeg:
                         time_end = time.time()
                         self.mes_show(
                             ("The whole operation is performed in {0} seconds.".format(
-                                str(time_end - time_start))), 
-                            30)
+                                str(time_end - time_start))), 30)
                     else:
                         self.mes_show(
                             "model_file or params_file is None.", 10, "error")
