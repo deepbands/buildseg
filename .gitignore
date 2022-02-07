@@ -145,11 +145,15 @@ data
 
 buildseg/i18n/buildSeg.pro.user
 
+dynamic_weight
+*.pdparams
 static_weight
 *.yaml
 *.pdmodel
 *.pdiparams
 *.pdiparams.info
+onnx_weight
+*.onnx
 
 .qt_for_python
 

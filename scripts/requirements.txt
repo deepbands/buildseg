@@ -1,0 +1,4 @@
+paddlepaddle
+paddleseg
+paddle2onnx
+onnx
