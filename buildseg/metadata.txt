@@ -12,7 +12,7 @@ version=0.1.3
 author=deepbands (Yizhou Chen and Youssef Harby)
 email=geoyee@yeah.net
 
-about=Deep learning building segmentation base on PaddlePaddle.
+about=Deep learning building segmentation base on ONNX.
 
 tracker=https://github.com/deepbands/buildseg/issues
 repository=https://github.com/deepbands/buildseg
@@ -39,7 +39,7 @@ deprecated=False
 # Since QGIS 3.8, a comma separated list of plugins to be installed
 # (or upgraded) can be specified.
 # Check the documentation for more information.
-# plugin_dependencies=opencv-python, paddlepaddle>=2.2.0
+plugin_dependencies=opencv-python, onnx, onnxruntime
 
 Category of the plugin: Raster, Vector, Database or Web
 # category=
