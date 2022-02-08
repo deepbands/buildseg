@@ -48,9 +48,9 @@ git clone git@github.com:deepbands/buildseg.git
 
 |                        Model                         | Backbone  | Resolution |  mIoU  | Params(MB) | Running Time(s) |                        Static Weight                         |
 | :--------------------------------------------------: | :-------: | :--------: | :----: | :--------: | :-------------: | :----------------------------------------------------------: |
-|    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 |  512x512   | 89.38% |   46.49    |     39.090      | [Baidu drive](https://pan.baidu.com/s/1ZOy4HpC2TPWIGSGU0DX2UQ) \| [Google drive]() |
-| [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     |  512x512   | 89.47% |   104.56   |     59.498      | [Baidu drive](https://pan.baidu.com/s/1knnge-bRkXIhzS-RRTJ8lQ) \| [Google drive]() |
-|  [BiSeNet_V2](https://arxiv.org/pdf/2004.02147.pdf)  |     -     |  512x512   | 84.61% |    8.94    |      7.004      | [Baidu drive](https://pan.baidu.com/s/1pDBLc7MoLaBERKe2I536sA) \| [Google drive]() |
+|    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 |  512x512   | 89.38% |   46.49    |     39.090      | [Baidu drive](https://pan.baidu.com/s/1ZOy4HpC2TPWIGSGU0DX2UQ) \| [Google drive](https://drive.google.com/file/d/1wKC5PxroqDzrUz9nOFuA1KOFlv18MqS9/view?usp=sharing) |
+| [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     |  512x512   | 89.47% |   104.56   |     59.498      | [Baidu drive](https://pan.baidu.com/s/1knnge-bRkXIhzS-RRTJ8lQ) \| [Google drive](https://drive.google.com/file/d/1TXF2T6LORRyDoCmkwmZsxjo0Km9BwuAK/view?usp=sharing) |
+|  [BiSeNet_V2](https://arxiv.org/pdf/2004.02147.pdf)  |     -     |  512x512   | 84.61% |    8.94    |      7.004      | [Baidu drive](https://pan.baidu.com/s/1pDBLc7MoLaBERKe2I536sA) \| [Google drive](https://drive.google.com/file/d/1SYwzWBU4wMJfzOf83Tboe7_P7TLW44xw/view?usp=sharing) |
 
 *\*Noto : All of Baidu drive's code is `band`.*
 

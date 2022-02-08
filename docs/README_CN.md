@@ -49,9 +49,9 @@ git clone git@github.com:deepbands/buildseg.git
 
 |                         模型                         | 骨干网络  | 分辨率  | 平均交并比 | 参数(MB) | 运行耗时(s) |                           静态权重                           |
 | :--------------------------------------------------: | :-------: | :-----: | :--------: | :------: | :---------: | :----------------------------------------------------------: |
-|    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 | 512x512 |   89.38%   |  46.49   |   39.090    | [百度云盘](https://pan.baidu.com/s/1ZOy4HpC2TPWIGSGU0DX2UQ) \| [谷歌云盘]() |
-| [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     | 512x512 |   89.47%   |  104.56  |   59.498    | [百度云盘](https://pan.baidu.com/s/1knnge-bRkXIhzS-RRTJ8lQ) \| [谷歌云盘]() |
-|  [BiSeNet_V2](https://arxiv.org/pdf/2004.02147.pdf)  |     -     | 512x512 |   84.61%   |   8.94   |    7.004    | [百度云盘](https://pan.baidu.com/s/1pDBLc7MoLaBERKe2I536sA) \| [谷歌云盘]() |
+|    [OCRNet](https://arxiv.org/pdf/1909.11065.pdf)    | HRNet_W18 | 512x512 |   89.38%   |  46.49   |   39.090    | [百度云盘](https://pan.baidu.com/s/1ZOy4HpC2TPWIGSGU0DX2UQ) \| [谷歌云盘](https://drive.google.com/file/d/1wKC5PxroqDzrUz9nOFuA1KOFlv18MqS9/view?usp=sharing) |
+| [SegFormer_B2](https://arxiv.org/pdf/2112.08275.pdf) |     -     | 512x512 |   89.47%   |  104.56  |   59.498    | [百度云盘](https://pan.baidu.com/s/1knnge-bRkXIhzS-RRTJ8lQ) \| [谷歌云盘](https://drive.google.com/file/d/1TXF2T6LORRyDoCmkwmZsxjo0Km9BwuAK/view?usp=sharing) |
+|  [BiSeNet_V2](https://arxiv.org/pdf/2004.02147.pdf)  |     -     | 512x512 |   84.61%   |   8.94   |    7.004    | [百度云盘](https://pan.baidu.com/s/1pDBLc7MoLaBERKe2I536sA) \| [谷歌云盘](https://drive.google.com/file/d/1SYwzWBU4wMJfzOf83Tboe7_P7TLW44xw/view?usp=sharing) |
 
 *\*说明 ：所有百度网盘的提取码均为`band`.*
 
