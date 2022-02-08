@@ -1,8 +1,0 @@
-model:
-  type: SegFormer_B2
-  num_classes: 2
-
-transforms:
-  - type: Resize
-    target_size: [512, 512]
-  - type: Normalize

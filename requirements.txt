@@ -1,6 +1,4 @@
 opencv-python
-paddlepaddle>=2.2.0
-numpy>=1.22.1
-
-# if you need train
-paddleseg
+numpy
+onnx
+onnxruntime
