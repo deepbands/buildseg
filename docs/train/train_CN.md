@@ -251,3 +251,11 @@ evaluate(
 [INFO]	[EVAL] Class Acc: [0.9889 0.8701]
 
 ```
+
+### BiSeNet_V2
+
+```shell
+[INFO]	[EVAL] #Images: 5000 mIoU: 0.8461 Acc: 0.9359 Kappa: 0.8303 
+[INFO]	[EVAL] Class IoU: [0.9179 0.7742]
+[INFO]	[EVAL] Class Acc: [0.9844 0.8065]
+```
