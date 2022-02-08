@@ -1,6 +1,14 @@
-import cv2
-import numpy as np
-import onnxruntime
+import subprocess
+try:
+    import cv2
+    import numpy as np
+    import onnxruntime
+except ImportError:
+    subprocess.check_call(
+        ["python3", '-m', 'pip', 'install', 'opencv-python', 'onnx', 'onnxruntime', 'numpy'])
+    import cv2
+    import numpy as np
+    import onnxruntime
 
 try:
     from .postpro import *

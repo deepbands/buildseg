@@ -25,13 +25,13 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python, building segmentation, remote sensing, satellite, deep learning
+tags=python, building segmentation, remote sensing, satellite, deep learning, deepbands
 
 homepage=https://github.com/deepbands/buildseg
 category=Plugins
 icon=icon.png
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
