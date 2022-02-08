@@ -66,24 +66,6 @@ git clone git@github.com:deepbands/buildseg.git
 
 ## 待办事项
 
-### v0.2
-
-- [x] 环境中依赖包的检查。
-- [x] 添加例如ViT等的其他模型。
-- [x] 添加描述说明：
-    - [x] 关于如何在AI Studio以及本地训练自己的数据。
-    - [x] 关于不同模型（论文链接）。
-- [x] 加速和减小内存：
-  - [x] 设置PaddlePaddle预测引擎。
-  - [x] 添加最大像素值计算或者使用GDAL的`translat / warp`来减小栅格大小
-  - [x] 使用分块拼接和保存。
-- [x] 转换PaddlePaddle为ONNX。
-    - [x] 更新README。
-- [x] 测试（尝试使用ONNX）：
-    - [x] 在 Windows 10/11上。
-    - [x] 在Linux（Ubuntu）上。
-    - [x] 在mac OS Big Sur+上。
-
 ### v0.3
 
 - [ ] 添加对在线地图瓦片的支持：

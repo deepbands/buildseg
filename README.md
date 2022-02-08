@@ -65,24 +65,6 @@ This work is in progress, at present, the relevant documents are as follows :
 
 ## TODO
 
-### v0.2
-
-- [x] Environment dependency package check.
-- [x] Add another model, like Vision Transform.
-- [x] Add note :
-    - [x] About how to training your data in AI Studio / Local.
-    - [x] About different model (paper's link).
-- [x] Accelerate and reduce memory :
-    - [x] PaddlePaddle setting.
-    - [x] Add maximum pixelsize to calculate / using GDAL `translat / warp` to make raster smaller.
-    - [x] Block stacking and saving.
-- [x] Convert PaddlePaddle to ONNX.
-    - [x] Update README.
-- [x] Test (try to use ONNX) :
-  - [x] On Windows 10/11.
-  - [x] On Linux (Ubuntu).
-  - [x] On mac OS Big Sur+.
-
 ### v0.3
 
 - [ ] Add online map tiles support :
