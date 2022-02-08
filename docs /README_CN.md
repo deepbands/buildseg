@@ -79,10 +79,10 @@ git clone git@github.com:deepbands/buildseg.git
   - [x] 使用分块拼接和保存。
 - [x] 转换PaddlePaddle为ONNX。
     - [x] 更新README。
-- [ ] 测试（尝试使用ONNX）：
+- [x] 测试（尝试使用ONNX）：
     - [x] 在 Windows 10/11上。
     - [x] 在Linux（Ubuntu）上。
-    - [ ] 在mac OS Big Sur+上。
+    - [x] 在mac OS Big Sur+上。
 
 ### v0.3
 
