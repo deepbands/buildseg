@@ -78,10 +78,10 @@ This work is in progress, at present, the relevant documents are as follows :
     - [x] Block stacking and saving.
 - [x] Convert PaddlePaddle to ONNX.
     - [x] Update README.
-- [ ] Test (try to use ONNX) :
+- [x] Test (try to use ONNX) :
   - [x] On Windows 10/11.
   - [x] On Linux (Ubuntu).
-  - [ ] On mac OS Big Sur+.
+  - [x] On mac OS Big Sur+.
 
 ### v0.3
 
