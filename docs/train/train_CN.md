@@ -19,56 +19,13 @@
 
 
 ```python
-# # 数据解压
-# # 如果数据集中只有一个压缩包，可以直接解压
-
-# # ! mkdir -p /home/aistudio/data/dataset
-# # ! unzip -oq /home/aistudio/data/data102929/rs_building_x.zip -d /home/aistudio/data/dataset
-
-
-# # 类似于这个数据有多个压缩包，可以循环解压
-
-# import os
-# import os.path as osp
-# from tqdm import tqdm
-# from zipfile import ZipFile
-
-
-# def _mkdir_p(folder_path):
-#     if not osp.exists(folder_path):
-#         os.makedirs(folder_path)
-
-
-# def unzip_folders(src, dst):
-#     _mkdir_p(dst)
-#     ps = os.listdir(src)
-#     for p in tqdm(ps):
-#         z = ZipFile(osp.join(src, p), 'r')
-#         z.extractall(path=dst)
-#         z.close()
-#     print("解压完成")
-
-
-# dataset_path = "/home/aistudio/data/data102929"
-# unzip_path = "/home/aistudio/data/dataset"
-# unzip_folders(dataset_path, unzip_path)
+# 数据解压
+! mkdir -p /home/aistudio/data/dataset
+! zip -s 0 -q /home/aistudio/data/data102929/rs_builds.zip --out /home/aistudio/data/rs_builds_all.zip
+! unzip -oq /home/aistudio/data/rs_builds_all.zip -d /home/aistudio/data/dataset
 ```
 
-## 3 数据筛选
-
-
-通过这里的代码可以将大面积标签为背景的图像剔除在数据列表之外，符合要求的数据名称则会保留在`train2.txt`中。
-
-
-```python
-# 数据筛选
-from label import get_img_file
-
-
-label = get_img_file('/home/aistudio/data/dataset/img')
-```
-
-## 4 划分数据列表
+## 3 划分数据列表
 
 将`train2.txt`中的文件名取出，打乱顺序，抽出5000份数据用于评估，其他数据用于训练，构造数据列表，保存为`train.txt`以及`val.txt`。
 
@@ -80,18 +37,15 @@ import os.path as osp
 import random
 
 
-train2_txt = "/home/aistudio/train2.txt"
+gt_folder = "/home/aistudio/data/dataset/rs_builds/gt"
 random.seed(24)
-# names = os.listdir(gt_folder)
-names = []
-with open(train2_txt, "r") as t2f:
-    names = t2f.readlines()
+names = os.listdir(gt_folder)
 random.shuffle(names)
 print("数据量: ", len(names))
-with open("data/dataset/train.txt", "w") as tf:
-    with open("data/dataset/val.txt", "w") as vf:
+with open("data/dataset/rs_builds/train.txt", "w") as tf:
+    with open("data/dataset/rs_builds/val.txt", "w") as vf:
         for idx, name in enumerate(names):
-            name = name.strip()
+            name = name.split(".")[0]
             if idx < 5000:  # 5000份数据用于评估
                 vf.write("img/" + name + ".jpg gt/" + name + ".png\n")
             else:
@@ -99,7 +53,7 @@ with open("data/dataset/train.txt", "w") as tf:
 print("完成")
 ```
 
-## 5 包导入
+## 4 包导入
 
 主要可以修改的地方在于可以导入不同的模型。有哪些模型可以参考[这里](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.3/docs/model_zoo_overview.md)。
 
@@ -114,7 +68,7 @@ from paddleseg.models.losses import MixedLoss, BCELoss, DiceLoss, LovaszHingeLos
 from paddleseg.core import train, evaluate
 ```
 
-## 6 数据集建立
+## 5 数据集建立
 
 其中是对数据的路径及使用的数据增强方式进行设置。其中包含了翻转旋转等数据增强操作，以及需要设置相对应的类别数。
 
@@ -132,25 +86,24 @@ train_transforms = [
 ]
 train_dataset = Dataset(
     transforms=train_transforms,
-    dataset_root="data/dataset",
+    dataset_root="data/dataset/rs_builds",
     num_classes=2,
     mode="train",
-    train_path="data/dataset/train.txt",
+    train_path="data/dataset/rs_builds/train.txt",
     separator=" "
 )
 
 # 建立评估数据集
 val_transforms = [
-    InitMask(),
     T.Resize(target_size=(512, 512)),
     T.Normalize()
 ]
 val_dataset = Dataset(
     transforms=val_transforms,
-    dataset_root="data/dataset",
+    dataset_root="data/dataset/rs_builds",
     num_classes=2,
     mode="val",
-    train_path="data/dataset/val.txt",
+    train_path="data/dataset/rs_builds/val.txt",
     separator=" "
 )
 ```
@@ -161,12 +114,15 @@ val_dataset = Dataset(
 
 
 ```python
+import numpy as np
+
+
 for img, lab in val_dataset:
     print(img.shape, lab.shape)
     print(np.unique(lab))
 ```
 
-## 7 训练参数设置
+## 6 训练参数设置
 
 从上到下分别是学习率、训练轮数、批大小、模型设置、学习率衰减设置、优化器设置及损失函数设置。这里可以参考[API文档](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.3/docs/apis/README_CN.md)。
 
@@ -193,7 +149,7 @@ losses["types"] = [MixedLoss([BCELoss(), DiceLoss(), LovaszHingeLoss()], [2, 1, 
 losses["coef"] = [1]  # [1, 0.4]
 ```
 
-## 8 开始训练
+## 7 开始训练
 
 一般来说，这里仅仅需要修改`save_dir`为自己的保存路径即可，还可以通过`save_interval`设置保存评估的间隔数。
 
@@ -216,7 +172,7 @@ train(
     use_vdl=True)
 ```
 
-## 9 模型评估
+## 8 模型评估
 
 直接运行即可。
 
@@ -228,10 +184,6 @@ evaluate(
     model,
     val_dataset)
 ```
-
-## 10 保存及转换为静态图模型
-
-查看保存模型的文件夹，将`best_model`下的`pdparams`文件下载到本地，然后可以在本地使用PaddleSeg将此动态图参数转为静态图模型，相关操作可以参考[这里](to_static_CN.md)。
 
 ## \* 当前结果
 

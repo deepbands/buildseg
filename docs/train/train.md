@@ -19,55 +19,13 @@ Before starting the data, you can find the data set through "modify" -> "next" o
 
 
 ```python
-# # Decompress data 
-# # If there is only one compressed package in the dataset, you can decompress it directly
-
-# # ! mkdir -p /home/aistudio/data/dataset
-# # ! unzip -oq /home/aistudio/data/data102929/rs_building_x.zip -d /home/aistudio/data/dataset
-
-
-# # Similar to this data, there are multiple compressed packages, which can be decompressed circularly
-
-# import os
-# import os.path as osp
-# from tqdm import tqdm
-# from zipfile import ZipFile
-
-
-# def _mkdir_p(folder_path):
-#     if not osp.exists(folder_path):
-#         os.makedirs(folder_path)
-
-
-# def unzip_folders(src, dst):
-#     _mkdir_p(dst)
-#     ps = os.listdir(src)
-#     for p in tqdm(ps):
-#         z = ZipFile(osp.join(src, p), 'r')
-#         z.extractall(path=dst)
-#         z.close()
-#     print("Decompression complete")
-
-
-# dataset_path = "/home/aistudio/data/data102929"
-# unzip_path = "/home/aistudio/data/dataset"
-# unzip_folders(dataset_path, unzip_path)
+# Decompress data
+! mkdir -p /home/aistudio/data/dataset
+! zip -s 0 -q /home/aistudio/data/data102929/rs_builds.zip --out /home/aistudio/data/rs_builds_all.zip
+! unzip -oq /home/aistudio/data/rs_builds_all.zip -d /home/aistudio/data/dataset
 ```
 
-## 3 Data filtering
-
-The code here can remove the image with a large area label as the background from the data list, and the data names that meet the requirements will be retained in `train2.txt`.
-
-
-```python
-# Data filtering
-from label import get_img_file
-
-
-label = get_img_file('/home/aistudio/data/dataset/img')
-```
-
-## 4 Split dataset list
+## 3 Split dataset list
 
 Add `train2.txt` file name is taken out, the order is disrupted, 5000 pieces of data are taken out for evaluation, other data are used for training, data list is constructed and saved as `train.txt` and `val.txt`.
 
@@ -79,18 +37,15 @@ import os.path as osp
 import random
 
 
-train2_txt = "/home/aistudio/train2.txt"
+gt_folder = "/home/aistudio/data/dataset/rs_builds/gt"
 random.seed(24)
-# names = os.listdir(gt_folder)
-names = []
-with open(train2_txt, "r") as t2f:
-    names = t2f.readlines()
+names = os.listdir(gt_folder)
 random.shuffle(names)
 print("Data volume: ", len(names))
-with open("data/dataset/train.txt", "w") as tf:
-    with open("data/dataset/val.txt", "w") as vf:
+with open("data/dataset/rs_builds/train.txt", "w") as tf:
+    with open("data/dataset/rs_builds/val.txt", "w") as vf:
         for idx, name in enumerate(names):
-            name = name.strip()
+            name = name.split(".")[0]
             if idx < 5000:  # 5000 data for evaluation
                 vf.write("img/" + name + ".jpg gt/" + name + ".png\n")
             else:
@@ -98,7 +53,7 @@ with open("data/dataset/train.txt", "w") as tf:
 print("Finished")
 ```
 
-## 5 Package import
+## 4 Package import
 
 The main thing you can modify is that you can import different models. What models can you refer to [here](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.3/docs/model_zoo_overview.md).
 
@@ -115,7 +70,7 @@ from paddleseg.models.losses import MixedLoss, BCELoss, DiceLoss, LovaszHingeLos
 from paddleseg.core import train, evaluate
 ```
 
-## 6 Data set establishment
+## 5 Data set establishment
 
 Where is to set the data path and the data enhancement method used. It includes data enhancement operations such as flip and rotation, and the number of classes to be set.
 
@@ -133,25 +88,24 @@ train_transforms = [
 ]
 train_dataset = Dataset(
     transforms=train_transforms,
-    dataset_root="data/dataset",
+    dataset_root="data/dataset/rs_builds",
     num_classes=2,
     mode="train",
-    train_path="data/dataset/train.txt",
+    train_path="data/dataset/rs_builds/train.txt",
     separator=" "
 )
 
 # Build validation set
 val_transforms = [
-    InitMask(),
     T.Resize(target_size=(512, 512)),
     T.Normalize()
 ]
 val_dataset = Dataset(
     transforms=val_transforms,
-    dataset_root="data/dataset",
+    dataset_root="data/rs_builds/dataset",
     num_classes=2,
     mode="val",
-    train_path="data/dataset/val.txt",
+    train_path="data/dataset/rs_builds/val.txt",
     separator=" "
 )
 ```
@@ -162,12 +116,15 @@ You can use this step to check whether the shape and label range of the dataset 
 
 
 ```python
+import numpy as np
+
+
 for img, lab in val_dataset:
     print(img.shape, lab.shape)
     print(np.unique(lab))
 ```
 
-## 7 Training parameter setting
+## 6 Training parameter setting
 
 From top to bottom are learning rate, number of training rounds, batch size, model setting, learning rate attenuation setting, optimizer setting and loss function setting. You can refer to [API documentation](https://github.com/PaddlePaddle/PaddleSeg/blob/release/2.3/docs/apis/README.md) here.
 
@@ -194,7 +151,7 @@ losses["types"] = [MixedLoss([BCELoss(), DiceLoss(), LovaszHingeLoss()], [2, 1, 
 losses["coef"] = [1]  # [1, 0.4]
 ```
 
-## 8 Start training
+## 7 Start training
 
 Generally speaking, you only need to modify `save_dir` can be your own save path, or through `save_interval` sets the number of intervals to save the evaluation.
 
@@ -217,7 +174,7 @@ train(
     use_vdl=True)
 ```
 
-## 9 Model evaluation
+## 8 Model evaluation
 
 Just run it directly.
 
@@ -229,10 +186,6 @@ evaluate(
     model,
     val_dataset)
 ```
-
-## 10 Save and convert to static graph model
-
-View the folder where the model is saved, and click the `pdparams` file under the `best_model` is downloaded locally, and then this dynamic graph parameter can be converted into a static graph model locally using paddleseg. For relevant operations, please refer to [here](to_static.md).
 
 ## \* Current results
 
