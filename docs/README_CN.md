@@ -67,8 +67,9 @@ git clone git@github.com:deepbands/buildseg.git
 ## 待办事项
 
 ### v0.3
+
 添加对在线地图瓦片的支持
-- [ ] 支持在线地图瓦片下载和拼接保存（参考[这个](https://github.com/geoyee/tiles2tiff)）。
-- [ ] 更新UI。
+- [x] 支持在线地图瓦片下载和拼接保存（参考[这个](https://github.com/geoyee/tiles2tiff)）。
+- [x] 更新UI。
 - [ ] 增加对矢量图层范围的确定。
 - [ ] 可以对下载的图像进行建筑提取。
