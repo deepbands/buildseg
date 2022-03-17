@@ -67,6 +67,6 @@ This work is in progress, at present, the relevant documents are as follows :
 
 ### v0.3
 
-- [ ] Add online map tiles support :
+- [ ] Add online map tiles support (use [this](https://github.com/geoyee/tiles-to-tiff)) :
 	- [ ] Extract building on raster in memory.
 	- [ ] Add vector range selection.
