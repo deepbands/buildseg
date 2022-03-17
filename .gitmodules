@@ -1,0 +1,3 @@
+[submodule "buildseg/utils/tiles-to-tiff"]
+	path = buildseg/utils/tiles-to-tiff
+	url = git@github.com:geoyee/tiles-to-tiff.git
