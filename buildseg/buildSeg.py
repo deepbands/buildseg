@@ -31,7 +31,7 @@ from .resources import *
 from .buildSeg_dialog import buildSegDialog
 # from qgis.utils import iface
 from qgis.core import (
-    QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject, Qgis)
+    QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject, Qgis, QgsCoordinateReferenceSystem)
 from qgis.utils import iface
 
 import os.path as osp
@@ -238,6 +238,22 @@ class buildSeg:
         self.dlg.mQgsDoubleSpinBox.setEnabled(bool(state // 2))
 
 
+    def ui_change(self, is_collapsed):
+        MIN_HEIGHT = 330
+        MAX_HEIGHT = 460
+        self.dlg.mMapLayerComboBoxR.setEnabled(is_collapsed)
+        rect = self.dlg.geometry()
+        if is_collapsed:
+            self.dlg.setFixedHeight(MIN_HEIGHT)
+            rect.setHeight(MIN_HEIGHT)
+        else:
+            self.dlg.setFixedHeight(MAX_HEIGHT)
+            rect.setHeight(MAX_HEIGHT)
+        # FIXME: cant update on time
+        self.dlg.setGeometry(rect)
+        self.dlg.updateGeometry()
+
+
     def init_setting(self):
         # Add setting
         self.dlg.mQfwParams.setFilter("*.onnx")
@@ -247,6 +263,7 @@ class buildSeg:
         self.dlg.mQfwParams.fileChanged.connect(self.select_onnx_file)  # load params
         self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
         self.dlg.ccbSimplify.stateChanged.connect(self.simp_state_change)
+        self.dlg.mExtentGroupBox.collapsedStateChanged.connect(self.ui_change)
         # show the dialog
         self.dlg.show()
         self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
@@ -271,6 +288,9 @@ class buildSeg:
             self.init_setting()  # init all of widget's settings
         if self.gui_number == 1:  # avoid multiple startup plugin errors
             self.infer_worker = utils.InferWorker(self.onnx_file)
+            # Set crs, now just support 4326
+            current_proj = QgsProject.instance()
+            current_proj.setCrs(QgsCoordinateReferenceSystem(4326))  # WGS84
             # Run the dialog event loop
             result = self.dlg.exec_()
             # See if OK was pressed
