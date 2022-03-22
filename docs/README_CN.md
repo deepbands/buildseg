@@ -10,11 +10,9 @@
 
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/downloads/release/python-380/) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11+-green.svg)](https://www.qgis.org/) ![license](https://img.shields.io/github/license/deepbands/buildseg) ![release](https://img.shields.io/badge/release-v0.2-red.svg)
 
-buildseg是一个基于ONNX的用于建筑提取的QGIS插件（使用PaddlePaddle训练并转为ONNX），使用PaddleSeg提供的语义分割能力，可以对大片区域进行分块提取并拼接。
+buildseg是一个基于ONNX的用于建筑提取的QGIS插件（使用PaddlePaddle训练并转为ONNX），使用PaddleSeg提供的语义分割能力，可以对大片区域进行分块提取并拼接。当前新增了自动下载栅格影像并进行建筑提取，用户需要在Mapbox进行注册并记录Token。
 
-![bs2](https://user-images.githubusercontent.com/71769312/152922974-e24566bc-cdfd-4580-b482-0717e7d1892d.gif)
-
-*\*说明：使用的栅格大小为 4983x3475，且使用的模型为SegFormer_B2。*
+![bs2](https://user-images.githubusercontent.com/71769312/152922974-e24566bc-cdfd-4580-b482-0717e7d1892d.gi)
 
 ![show](https://user-images.githubusercontent.com/71769312/159407433-96052623-3837-41dd-86b8-003da15b59eb.gif)
 
@@ -79,3 +77,4 @@ git clone git@github.com:deepbands/buildseg.git
 - [x] 可以对下载的图像进行建筑提取。
 - [ ] 修复更改窗口大小时更新UI。
 - [ ] 添加国际化支持。
+- [ ] 更新文档。

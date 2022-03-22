@@ -9,11 +9,9 @@
 
 [![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/downloads/release/python-380/) [![QGIS 3.16.11](https://img.shields.io/badge/qgis-3.16.11+-green.svg)](https://www.qgis.org/) ![license](https://img.shields.io/github/license/deepbands/buildseg) ![release](https://img.shields.io/badge/release-v0.2-red.svg)
 
-buildseg is a Building Extraction plugin for QGIS based on ONNX (Use PaddlePaddle to train and convert to ONNX), and it using the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced.
+buildseg is a Building Extraction plugin for QGIS based on ONNX (Use PaddlePaddle to train and convert to ONNX), and it using the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced. At present, automatic downloading of raster images and building extraction are added, and users need to register in mapbox and record Token.
 
-![bs2](https://user-images.githubusercontent.com/71769312/152922974-e24566bc-cdfd-4580-b482-0717e7d1892d.gif)
-
-*\*Noto: Raster's size is 4983x3475, and model is SegFormer_B2.*
+![bs2](https://user-images.githubusercontent.com/71769312/152922974-e24566bc-cdfd-4580-b482-0717e7d1892d.gi)
 
 ![show](https://user-images.githubusercontent.com/71769312/159407433-96052623-3837-41dd-86b8-003da15b59eb.gif)
 
@@ -78,3 +76,4 @@ Add support for online map tiles
 - [x] Extract building.
 - [ ] Fix update UI when Window‘s size changed.
 - [ ] Fix international.
+- [ ] Update READEM.
