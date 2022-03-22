@@ -294,13 +294,13 @@ class buildSeg:
         self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
         self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
         self.dlg.cbxScale.addItems([str(s) for s in self.scale_list])
-        # quick test in my computer
-        self.dlg.cbxScale.setCurrentIndex(5)
-        import os
-        self.dlg.tokenEdit.setText(os.environ["mapbox_token"])
-        self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\test\test.shp")
-        self.dlg.mQfwParams.setFilePath(
-            r"E:\dataFiles\github\buildseg\onnx_weight\bisenet_v2_512x512_rs_building.onnx")
+        # # quick test in my computer
+        # self.dlg.cbxScale.setCurrentIndex(5)
+        # import os
+        # self.dlg.tokenEdit.setText(os.environ["mapbox_token"])
+        # self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\test\test.shp")
+        # self.dlg.mQfwParams.setFilePath(
+        #     r"E:\dataFiles\github\buildseg\onnx_weight\bisenet_v2_512x512_rs_building.onnx")
 
 
     def run(self):
