@@ -46,7 +46,9 @@ def dowm_sample(file_path, down_sample_save, scale=0.5):
     for index in range(1, total):
         data = dataset.GetRasterBand(index).ReadAsArray(buf_xsize=cols, buf_ysize=rows)
         out_band = target.GetRasterBand(index)
-        out_band.SetNoDataValue(dataset.GetRasterBand(index).GetNoDataValue())
+        nodata = dataset.GetRasterBand(index).GetNoDataValue()
+        if nodata is not None:
+            out_band.SetNoDataValue(nodata)
         out_band.WriteArray(data)
         out_band.FlushCache()
         out_band.ComputeBandStats(False)

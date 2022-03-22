@@ -31,7 +31,9 @@ from .resources import *
 from .buildSeg_dialog import buildSegDialog
 # from qgis.utils import iface
 from qgis.core import (
-    QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject, Qgis, QgsCoordinateReferenceSystem)
+    QgsMapLayerProxyModel, QgsVectorFileWriter, QgsProject, \
+    Qgis, QgsCoordinateReferenceSystem, QgsRectangle
+)
 from qgis.utils import iface
 
 import os.path as osp
@@ -242,16 +244,32 @@ class buildSeg:
         MIN_HEIGHT = 330
         MAX_HEIGHT = 460
         self.dlg.mMapLayerComboBoxR.setEnabled(is_collapsed)
-        rect = self.dlg.geometry()
-        if is_collapsed:
-            self.dlg.setFixedHeight(MIN_HEIGHT)
-            rect.setHeight(MIN_HEIGHT)
+        self.dlg.setFixedHeight(MIN_HEIGHT if is_collapsed else MAX_HEIGHT)
+        # FIXME: need move and update UI's size
+
+
+    # # for test
+    # def extent_change(self):
+    #     extent = self.dlg.mExtentGroupBox.outputExtent()
+    #     rect_range = {"lon_min": extent.xMinimum(), "lon_max": extent.xMaximum(),
+    #                   "lat_min": extent.yMinimum(), "lat_max": extent.yMaximum()}
+    #     print(rect_range)
+
+
+    def get_current_raster(self):
+        if self.dlg.mMapLayerComboBoxR.isEnabled():
+            return self.dlg.mMapLayerComboBoxR.currentLayer()
         else:
-            self.dlg.setFixedHeight(MAX_HEIGHT)
-            rect.setHeight(MAX_HEIGHT)
-        # FIXME: cant update on time
-        self.dlg.setGeometry(rect)
-        self.dlg.updateGeometry()
+            print("Start domwloading titles.")
+            extent = self.dlg.mExtentGroupBox.outputExtent()
+            rect_range = {"lon_min": extent.xMinimum(), "lon_max": extent.xMaximum(),
+                          "lat_min": extent.yMinimum(), "lat_max": extent.yMaximum()}
+            # print(rect_range)
+            dload_path = self.save_shp_path.replace(".shp", "_dload.tif")
+            utils.get_raster_from_titles(
+                rect_range, dload_path, self.dlg.tokenEdit.text(), 20)
+            iface.addRasterLayer(dload_path, "deepbands-download", "gdal")
+            return QgsProject.instance().mapLayersByName("deepbands-download")[0]
 
 
     def init_setting(self):
@@ -259,22 +277,30 @@ class buildSeg:
         self.dlg.mQfwParams.setFilter("*.onnx")
         self.dlg.mQfwShape.setFilter("*.shp")
         self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
+        self.dlg.mExtentGroupBox.setOriginalExtent(
+            QgsRectangle(-180, -90, 180, 90),
+            QgsProject.instance().crs()
+        )
+        self.dlg.mExtentGroupBox.setOutputCrs(QgsCoordinateReferenceSystem(4326))
         # Add event
         self.dlg.mQfwParams.fileChanged.connect(self.select_onnx_file)  # load params
         self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
         self.dlg.ccbSimplify.stateChanged.connect(self.simp_state_change)
         self.dlg.mExtentGroupBox.collapsedStateChanged.connect(self.ui_change)
+        # self.dlg.mExtentGroupBox.extentChanged.connect(self.extent_change)  # for test
         # show the dialog
         self.dlg.show()
         self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
         self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
         self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
         self.dlg.cbxScale.addItems([str(s) for s in self.scale_list])
-        # # quick test in my computer
-        # self.dlg.cbxScale.setCurrentIndex(5)
-        # self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\dd\test.shp")
-        # self.dlg.mQfwParams.setFilePath(
-        #     r"E:\dataFiles\github\buildseg\static_weight\bisenet_v2_512x512\model.pdiparams")
+        # quick test in my computer
+        self.dlg.cbxScale.setCurrentIndex(5)
+        import os
+        self.dlg.tokenEdit.setText(os.environ["mapbox_token"])
+        self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\test\test.shp")
+        self.dlg.mQfwParams.setFilePath(
+            r"E:\dataFiles\github\buildseg\onnx_weight\bisenet_v2_512x512_rs_building.onnx")
 
 
     def run(self):
@@ -288,9 +314,6 @@ class buildSeg:
             self.init_setting()  # init all of widget's settings
         if self.gui_number == 1:  # avoid multiple startup plugin errors
             self.infer_worker = utils.InferWorker(self.onnx_file)
-            # Set crs, now just support 4326
-            current_proj = QgsProject.instance()
-            current_proj.setCrs(QgsCoordinateReferenceSystem(4326))  # WGS84
             # Run the dialog event loop
             result = self.dlg.exec_()
             # See if OK was pressed
@@ -303,16 +326,16 @@ class buildSeg:
                     overlap = [int(self.dlg.cbxOverlap.currentText())] * 2
                     scale_rate = float(self.dlg.cbxScale.currentText())
                     print(f"grid_size is {grid_size}, overlap is {overlap}, " + \
-                        "scale_rate is {scale_rate}.")
+                          "scale_rate is {scale_rate}.")
                     # layers = iface.activeLayer()  # Get the currently active layer
                     # Get the selected raster layer
-                    current_raster_layer = self.dlg.mMapLayerComboBoxR.currentLayer()
+                    current_raster_layer = self.get_current_raster()
                     # Band used by the current renderer
                     band_list = current_raster_layer.renderer().usesBands()
                     # Get the raster layer path
                     current_raster_layer_name = current_raster_layer.source()
                     # Add downsample
-                    down_save_path = self.save_shp_path.replace(".shp", "_dowm.tif")
+                    down_save_path = self.save_shp_path.replace(".shp", "_dsample.tif")
                     layer_path = utils.dowm_sample(current_raster_layer_name, \
                                                 down_save_path, scale_rate)
                     print(f"layer_path: {layer_path}")

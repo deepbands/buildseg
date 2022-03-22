@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>459</height>
+    <height>460</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,9 +30,6 @@
   </property>
   <property name="windowTitle">
    <string>buildSeg</string>
-  </property>
-  <property name="locale">
-   <locale language="English" country="UnitedStates"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -80,7 +77,7 @@
         <bool>false</bool>
        </property>
        <property name="allowEmptyLayer">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -102,11 +99,8 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="locale">
-        <locale language="English" country="UnitedStates"/>
-       </property>
        <property name="title">
-        <string notr="true">Range (current: layer)</string>
+        <string>Range (current: layer)</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -121,7 +115,7 @@
         <bool>false</bool>
        </property>
        <property name="syncGroup">
-        <string notr="true"/>
+        <string/>
        </property>
        <property name="scrollOnExpand">
         <bool>true</bool>
@@ -133,7 +127,7 @@
         <bool>false</bool>
        </property>
        <property name="titleBase">
-        <string notr="true">Range</string>
+        <string>Range</string>
        </property>
       </widget>
      </item>
