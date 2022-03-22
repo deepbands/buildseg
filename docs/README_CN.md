@@ -16,6 +16,10 @@ buildseg是一个基于ONNX的用于建筑提取的QGIS插件（使用PaddlePadd
 
 *\*说明：使用的栅格大小为 4983x3475，且使用的模型为SegFormer_B2。*
 
+![show](https://user-images.githubusercontent.com/71769312/159407433-96052623-3837-41dd-86b8-003da15b59eb.gif)
+
+*\*说明：栅格根据矢量范围从Mapbox下载，且使用的模型为SegFormer_B2。*
+
 ## 如何使用
 
 1. 下载并安装[QGIS](https://www.qgis.org/en/site/)，然后克隆这个项目：
@@ -71,5 +75,7 @@ git clone git@github.com:deepbands/buildseg.git
 添加对在线地图瓦片的支持
 - [x] 支持在线地图瓦片下载和拼接保存（参考[这个](https://github.com/geoyee/tiles2tiff)）。
 - [x] 更新UI。
-- [ ] 增加对矢量图层范围的确定。
-- [ ] 可以对下载的图像进行建筑提取。
+- [x] 增加对矢量图层范围的确定。
+- [x] 可以对下载的图像进行建筑提取。
+- [ ] 修复更改窗口大小时更新UI。
+- [ ] 添加国际化支持。

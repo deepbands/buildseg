@@ -337,7 +337,7 @@ class buildSeg:
                     # Add downsample
                     down_save_path = self.save_shp_path.replace(".shp", "_dsample.tif")
                     layer_path = utils.dowm_sample(current_raster_layer_name, \
-                                                down_save_path, scale_rate)
+                                                   down_save_path, scale_rate)
                     print(f"layer_path: {layer_path}")
                     ras_ds = gdal.Open(layer_path)
                     geot = ras_ds.GetGeoTransform()
@@ -370,7 +370,7 @@ class buildSeg:
                     if is_simp is True:
                         simp_save_path = self.save_shp_path.replace(".shp", "_simp.shp")
                         utils.simplify_polygon(self.save_shp_path, simp_save_path, \
-                                            self.dlg.mQgsDoubleSpinBox.value())
+                                               self.dlg.mQgsDoubleSpinBox.value())
                         iface.addVectorLayer(simp_save_path, "deepbands-simplified", "ogr")
                     time_end = time.time()
                     self.mes_show(

@@ -15,6 +15,10 @@ buildseg is a Building Extraction plugin for QGIS based on ONNX (Use PaddlePaddl
 
 *\*Noto: Raster's size is 4983x3475, and model is SegFormer_B2.*
 
+![show](https://user-images.githubusercontent.com/71769312/159407433-96052623-3837-41dd-86b8-003da15b59eb.gif)
+
+*\*Noto: The raster is downloaded from mapbox according to the vector range, and model is SegFormer_B2.*
+
 ## How to use
 
 1. Download and install [QGIS](https://www.qgis.org/en/site/) and clone the repo:
@@ -70,5 +74,7 @@ This work is in progress, at present, the relevant documents are as follows :
 Add support for online map tiles
 - [x] Support online map tile downloading and splicing and saving (Refer to [this](https://github.com/geoyee/tiles2tiff)).
 - [x] Update UI.
-- [ ] Add vector range selection.
-- [ ] Extract building.
+- [x] Add vector range selection.
+- [x] Extract building.
+- [ ] Fix update UI when Window‘s size changed.
+- [ ] Fix international.
