@@ -12,8 +12,6 @@
 
 buildseg是一个基于ONNX的用于建筑提取的QGIS插件（使用PaddlePaddle训练并转为ONNX），使用PaddleSeg提供的语义分割能力，可以对大片区域进行分块提取并拼接。当前新增了自动下载栅格影像并进行建筑提取，用户需要在Mapbox进行注册并记录Token。
 
-![bs2](https://user-images.githubusercontent.com/71769312/152922974-e24566bc-cdfd-4580-b482-0717e7d1892d.gi)
-
 ![show](https://user-images.githubusercontent.com/71769312/159407433-96052623-3837-41dd-86b8-003da15b59eb.gif)
 
 *\*说明：栅格根据矢量范围从Mapbox下载，且使用的模型为SegFormer_B2。*

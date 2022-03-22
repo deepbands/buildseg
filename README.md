@@ -11,8 +11,6 @@
 
 buildseg is a Building Extraction plugin for QGIS based on ONNX (Use PaddlePaddle to train and convert to ONNX), and it using the semantic segmentation ability provided by paddleseg, large areas can be extracted and spliced. At present, automatic downloading of raster images and building extraction are added, and users need to register in mapbox and record Token.
 
-![bs2](https://user-images.githubusercontent.com/71769312/152922974-e24566bc-cdfd-4580-b482-0717e7d1892d.gi)
-
 ![show](https://user-images.githubusercontent.com/71769312/159407433-96052623-3837-41dd-86b8-003da15b59eb.gif)
 
 *\*Noto: The raster is downloaded from mapbox according to the vector range, and model is SegFormer_B2.*
