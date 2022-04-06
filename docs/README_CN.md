@@ -63,16 +63,3 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [如何训练自己的数据](./docs/train/train_CN.md)
 - [如何转换为ONNX模型](./docs/train/to_onnx_CN.md)
-
-## 待办事项
-
-### v0.3
-
-添加对在线地图瓦片的支持
-- [x] 支持在线地图瓦片下载和拼接保存（参考[这个](https://github.com/geoyee/tiles2tiff)）。
-- [x] 更新UI。
-- [x] 增加对矢量图层范围的确定。
-- [x] 可以对下载的图像进行建筑提取。
-- [x] 修复更改窗口大小时更新UI。
-- [ ] 添加国际化支持。
-- [ ] 更新文档。

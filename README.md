@@ -62,16 +62,3 @@ This work is in progress, at present, the relevant documents are as follows :
 
 - [How to train your data](./docs/train/train.md)
 - [How to convert to ONNX weight](./docs/train/to_onnx.md)
-
-## TODO
-
-### v0.3
-
-Add support for online map tiles
-- [x] Support online map tile downloading and splicing and saving (Refer to [this](https://github.com/geoyee/tiles2tiff)).
-- [x] Update UI.
-- [x] Add vector range selection.
-- [x] Extract building.
-- [x] Fix update UI when Window‘s size changed.
-- [ ] Fix international.
-- [ ] Update READEM.
