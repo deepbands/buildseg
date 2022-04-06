@@ -72,6 +72,6 @@ Add support for online map tiles
 - [x] Update UI.
 - [x] Add vector range selection.
 - [x] Extract building.
-- [ ] Fix update UI when Window‘s size changed.
+- [x] Fix update UI when Window‘s size changed.
 - [ ] Fix international.
 - [ ] Update READEM.

@@ -73,6 +73,6 @@ git clone git@github.com:deepbands/buildseg.git
 - [x] 更新UI。
 - [x] 增加对矢量图层范围的确定。
 - [x] 可以对下载的图像进行建筑提取。
-- [ ] 修复更改窗口大小时更新UI。
+- [x] 修复更改窗口大小时更新UI。
 - [ ] 添加国际化支持。
 - [ ] 更新文档。

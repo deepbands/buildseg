@@ -36,6 +36,7 @@ from qgis.core import (
 )
 from qgis.utils import iface
 
+import os
 import os.path as osp
 import time
 import buildseg.utils as utils
@@ -241,11 +242,7 @@ class buildSeg:
 
 
     def ui_change(self, is_collapsed):
-        MIN_HEIGHT = 330
-        MAX_HEIGHT = 460
         self.dlg.mMapLayerComboBoxR.setEnabled(is_collapsed)
-        self.dlg.setFixedHeight(MIN_HEIGHT if is_collapsed else MAX_HEIGHT)
-        # FIXME: need move and update UI's size
 
 
     # # for test
@@ -294,13 +291,13 @@ class buildSeg:
         self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
         self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
         self.dlg.cbxScale.addItems([str(s) for s in self.scale_list])
-        # # quick test in my computer
-        # self.dlg.cbxScale.setCurrentIndex(5)
-        # import os
-        # self.dlg.tokenEdit.setText(os.environ["mapbox_token"])
-        # self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\test\test.shp")
-        # self.dlg.mQfwParams.setFilePath(
-        #     r"E:\dataFiles\github\buildseg\onnx_weight\bisenet_v2_512x512_rs_building.onnx")
+        # quick test in my computer
+        self.dlg.cbxScale.setCurrentIndex(0)
+        self.dlg.ccbSimplify.setChecked(False)
+        self.dlg.tokenEdit.setText(os.environ["mapbox_token"])
+        self.dlg.mQfwShape.setFilePath(r"C:\Users\Geoyee\Desktop\test\test.shp")
+        self.dlg.mQfwParams.setFilePath(
+            r"E:\dataFiles\github\buildseg\onnx_weight\bisenet_v2_512x512_rs_building.onnx")
 
 
     def run(self):
