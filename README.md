@@ -15,6 +15,12 @@ buildseg is a Building Extraction plugin for QGIS based on ONNX (Use PaddlePaddl
 
 *\*Noto: The raster is downloaded from mapbox according to the vector range, and model is SegFormer_B2.*
 
+## News
+
+- xx Apr 2022 [v0.3] : 1. Add support for online map tiles based on Mapbpx; 2. Internationalization support.
+- 08 Feb 2022 [v0.2] : 1. ONNX is used instead of PaddlePaddle; 2. Test in Windows / Linux / Mac OS.
+- 23 Dec 2021 [v0.1] : 1. Add segmentation based on PaddlePaddle; 2. Add mask to shapefile; 3. Add simplify.
+
 ## How to use
 
 1. Download and install [QGIS](https://www.qgis.org/en/site/) and clone the repo:
@@ -62,3 +68,8 @@ This work is in progress, at present, the relevant documents are as follows :
 
 - [How to train your data](./docs/train/train.md)
 - [How to convert to ONNX weight](./docs/train/to_onnx.md)
+
+## TODO：
+
+- [ ] Build a sample plugin instead of use plugin builder.
+

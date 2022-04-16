@@ -16,6 +16,12 @@ buildseg是一个基于ONNX的用于建筑提取的QGIS插件（使用PaddlePadd
 
 *\*说明：栅格根据矢量范围从Mapbox下载，且使用的模型为SegFormer_B2。*
 
+## 动向
+
+- xx 04 2022 [v0.3] : 1. 添加基于Mapbpx的在线地图分割； 2. 国际化支持。
+- 08 02 2022 [v0.2] : 1. 使用ONNX代替PaddlePaddle； 2. 在Windows / Linux / Mac OS上进行了测试。
+- 23 12 2021 [v0.1] : 1. 添加基于PaddlePaddle的语义分割功能； 2. 添加结果转为矢量数据 3. 添加矢量简化。
+
 ## 如何使用
 
 1. 下载并安装[QGIS](https://www.qgis.org/en/site/)，然后克隆这个项目：
@@ -63,3 +69,8 @@ git clone git@github.com:deepbands/buildseg.git
 
 - [如何训练自己的数据](./docs/train/train_CN.md)
 - [如何转换为ONNX模型](./docs/train/to_onnx_CN.md)
+
+## 待办事项
+
+- [ ] 不使用plugin builder来构建一个更简单的插件。
+
