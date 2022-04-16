@@ -243,6 +243,7 @@ class buildSeg:
 
     def ui_change(self, is_collapsed):
         self.dlg.mMapLayerComboBoxR.setEnabled(is_collapsed)
+        self.dlg.tokenEdit.setEnabled(not is_collapsed)
 
 
     # # for test
