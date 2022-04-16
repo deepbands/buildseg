@@ -20,7 +20,7 @@ buildseg是一个基于ONNX的用于建筑提取的QGIS插件（使用PaddlePadd
 
 - xx 04 2022 [v0.3] : 1. 添加基于Mapbpx的在线地图分割； 2. 国际化支持。
 - 08 02 2022 [v0.2] : 1. 使用ONNX代替PaddlePaddle； 2. 在Windows / Linux / Mac OS上进行了测试。
-- 23 12 2021 [v0.1] : 1. 添加基于PaddlePaddle的语义分割功能； 2. 添加结果转为矢量数据 3. 添加矢量简化。
+- 23 12 2021 [v0.1] : 1. 添加基于PaddlePaddle的语义分割功能； 2. 添加结果转为矢量数据； 3. 添加矢量简化。
 
 ## 如何使用
 
