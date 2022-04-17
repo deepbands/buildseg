@@ -75,8 +75,8 @@ def __stretch(ima: np.ndarray , NUMS: int) -> np.ndarray :
         for i in range(NUMS):
             lut.append(n / step)
             n += hist[i + bt]
-        np.take(lut, ima, out=ima)
-        return ima
+    np.take(lut, ima, out=ima)
+    return ima
 
 
 # Calculate histogram
