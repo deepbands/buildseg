@@ -344,6 +344,7 @@ class buildSeg:
                     # Get the selected raster layer
                     current_raster_layer = self.get_current_raster()
                     if current_raster_layer is None:
+                        self.mes_show("The current_raster_layer is None.", 20, "error")
                         return
                     # Band used by the current renderer
                     band_list = current_raster_layer.renderer().usesBands()
