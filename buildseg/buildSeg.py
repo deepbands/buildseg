@@ -36,7 +36,6 @@ from qgis.core import (
 )
 from qgis.utils import iface
 
-import os
 import os.path as osp
 import time
 import buildseg.utils as utils
@@ -66,7 +65,9 @@ class buildSeg:
         # initialize plugin directory
         self.plugin_dir = osp.dirname(__file__)
         # initialize locale
-        locale = QSettings().value("locale/userLocale")[0:2]
+        self.setting = QSettings()
+        print(self.setting)
+        locale = self.setting.value("locale/userLocale")[0:2]
         locale_path = osp.join(
             self.plugin_dir,
             "i18n",
@@ -292,7 +293,10 @@ class buildSeg:
         self.dlg.cbxOverlap.addItems([str(s) for s in self.overlap_size_list])
         self.dlg.cbxOverlap.setCurrentIndex(4)  # default 32
         self.dlg.cbxScale.addItems([str(s) for s in self.scale_list])
+        # QSetting
+        self.dlg.tokenEdit.setText(self.setting.value("mapbox_token", "", str))
         # # quick test in my computer
+        # import os
         # self.dlg.cbxScale.setCurrentIndex(0)
         # self.dlg.ccbSimplify.setChecked(False)
         # self.dlg.tokenEdit.setText(os.environ["mapbox_token"])
@@ -374,6 +378,8 @@ class buildSeg:
                     self.mes_show(
                         ("The whole operation is performed in {0} seconds.".format(
                             str(time_end - time_start))), 30)
+                    # save token
+                    self.setting.setValue("mapbox_token", self.dlg.tokenEdit.text())
                 else:
                     self.mes_show("params_file is None.", 10, "error")
         else:
