@@ -66,7 +66,6 @@ class buildSeg:
         self.plugin_dir = osp.dirname(__file__)
         # initialize locale
         self.setting = QSettings()
-        print(self.setting)
         locale = self.setting.value("locale/userLocale")[0:2]
         locale_path = osp.join(
             self.plugin_dir,
@@ -90,6 +89,7 @@ class buildSeg:
         self.onnx_file = None
         self.infer_worker = None
         self.save_shp_path = None
+        self.rect_range = None
 
         # Init block and overlap size
         self.block_size_list = [512]
@@ -247,28 +247,37 @@ class buildSeg:
         self.dlg.tokenEdit.setEnabled(not is_collapsed)
 
 
-    # # for test
-    # def extent_change(self):
-    #     extent = self.dlg.mExtentGroupBox.outputExtent()
-    #     rect_range = {"lon_min": extent.xMinimum(), "lon_max": extent.xMaximum(),
-    #                   "lat_min": extent.yMinimum(), "lat_max": extent.yMaximum()}
-    #     print(rect_range)
+    def extent_change_check(self):
+        extent = self.dlg.mExtentGroupBox.outputExtent()
+        rect_range = {"lon_min": extent.xMinimum(), "lon_max": extent.xMaximum(),
+                      "lat_min": extent.yMinimum(), "lat_max": extent.yMaximum()}
+        # print(rect_range)
+        if rect_range["lon_max"] > 180 or rect_range["lon_min"] < -180 or \
+           rect_range["lat_max"] > 85.0511 or rect_range["lat_min"] < -85.0511:
+            self.mes_show(
+                "Range must be lon:[-180, 180] and lat:[-85.0511, 85.0511].", 
+                20, "error")
+            self.rect_range = None
+        else:
+            self.rect_range = rect_range
 
 
     def get_current_raster(self):
         if self.dlg.mMapLayerComboBoxR.isEnabled():
             return self.dlg.mMapLayerComboBoxR.currentLayer()
         else:
-            print("Start domwloading titles.")
-            extent = self.dlg.mExtentGroupBox.outputExtent()
-            rect_range = {"lon_min": extent.xMinimum(), "lon_max": extent.xMaximum(),
-                          "lat_min": extent.yMinimum(), "lat_max": extent.yMaximum()}
-            # print(rect_range)
             dload_path = self.save_shp_path.replace(".shp", "_dload.tif")
-            utils.get_raster_from_titles(
-                rect_range, dload_path, self.dlg.tokenEdit.text(), 20)
-            iface.addRasterLayer(dload_path, "deepbands-download", "gdal")
-            return QgsProject.instance().mapLayersByName("deepbands-download")[0]
+            print("Start domwloading titles.")
+            try:
+                utils.get_raster_from_titles(
+                    self.rect_range, dload_path, self.dlg.tokenEdit.text(), 20)
+                iface.addRasterLayer(dload_path, "deepbands-download", "gdal")
+                return QgsProject.instance().mapLayersByName("deepbands-download")[0]
+            except:
+                self.mes_show(
+                    "Download error, please check your range / token or network.", 
+                    10, "error")
+                return None
 
 
     def init_setting(self):
@@ -277,16 +286,18 @@ class buildSeg:
         self.dlg.mQfwShape.setFilter("*.shp")
         self.dlg.mMapLayerComboBoxR.setFilters(QgsMapLayerProxyModel.RasterLayer)
         self.dlg.mExtentGroupBox.setOriginalExtent(
-            QgsRectangle(-180, -90, 180, 90),
+            QgsRectangle(-180, -85.0511, 180, 85.0511),
             QgsProject.instance().crs()
         )
         self.dlg.mExtentGroupBox.setOutputCrs(QgsCoordinateReferenceSystem(4326))
+        self.rect_range = {"lon_min": -180, "lon_max": 180,
+                           "lat_min": -85.0511, "lat_max": 85.0511}
         # Add event
         self.dlg.mQfwParams.fileChanged.connect(self.select_onnx_file)  # load params
         self.dlg.mQfwShape.fileChanged.connect(self.select_shp_save)
         self.dlg.ccbSimplify.stateChanged.connect(self.simp_state_change)
         self.dlg.mExtentGroupBox.collapsedStateChanged.connect(self.ui_change)
-        # self.dlg.mExtentGroupBox.extentChanged.connect(self.extent_change)  # for test
+        self.dlg.mExtentGroupBox.extentChanged.connect(self.extent_change_check)
         # show the dialog
         self.dlg.show()
         self.dlg.cbxBlock.addItems([str(s) for s in self.block_size_list])
@@ -332,6 +343,8 @@ class buildSeg:
                     # layers = iface.activeLayer()  # Get the currently active layer
                     # Get the selected raster layer
                     current_raster_layer = self.get_current_raster()
+                    if current_raster_layer is None:
+                        return
                     # Band used by the current renderer
                     band_list = current_raster_layer.renderer().usesBands()
                     # Get the raster layer path
