@@ -76,6 +76,4 @@ This work is in progress, at present, the relevant documents are as follows :
 
 - [How to convert to ONNX weight](./docs/train/to_onnx.md)
 
-## TODO：
-
-- [ ] Build a sample plugin instead of use plugin builder.
+# 

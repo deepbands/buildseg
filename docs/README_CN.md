@@ -77,6 +77,4 @@ buildseg是一个基于ONNX的用于建筑提取的QGIS插件（使用PaddlePadd
 
 - [如何转换为ONNX模型](./docs/train/to_onnx_CN.md)
 
-## 待办事项
-
-- [ ] 不使用plugin builder来构建一个更简单的插件。
+# 
