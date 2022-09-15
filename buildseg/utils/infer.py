@@ -20,7 +20,7 @@ class InferWorker(object):
     def __init__(self, onnx_file, size=512):
         super(InferWorker, self).__init__()
         if onnx_file is not None:
-            self.ort_sess = onnxruntime.InferenceSession(onnx_file)
+            self.load_model(onnx_file)
         self.size = (size, size) if isinstance(size, int) else size
         _mean=[0.5] * 3
         _std=[0.5] * 3
@@ -28,7 +28,13 @@ class InferWorker(object):
         self._std = np.float32(np.array(_std).reshape(-1, 1, 1))
 
     def load_model(self, onnx_file):
-        self.ort_sess = onnxruntime.InferenceSession(onnx_file)
+        try:
+            self.ort_sess = onnxruntime.InferenceSession(onnx_file)
+        except ValueError:
+            self.ort_sess = onnxruntime.InferenceSession(
+                onnx_file, 
+                providers=["CPUExecutionProvider"]
+            )
 
     def __preprocess(self, img):
         h, w = img.shape[:2]
